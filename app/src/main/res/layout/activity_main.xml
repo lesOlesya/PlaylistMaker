@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/blue"
     android:paddingHorizontal="@dimen/indent_and_rounding"
-    android:paddingVertical="14dp">
+    android:paddingVertical="@dimen/top">
 
     <TextView
         android:layout_width="match_parent"
