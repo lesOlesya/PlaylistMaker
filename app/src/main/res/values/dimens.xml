@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font">22sp</dimen>
+    <dimen name="indent_and_rounding">16dp</dimen>
+    <dimen name="indent_from_the_icon">8dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="indent_12">12dp</dimen>
+
+</resources>
