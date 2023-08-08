@@ -22,6 +22,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/search_button"
             android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero"
@@ -30,6 +31,7 @@
             android:text="@string/search"
             android:textSize="@dimen/font"
             android:textColor="@color/black1"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/indent_and_rounding"
 
             app:icon="@drawable/search"
@@ -39,6 +41,7 @@
 
 
         <Button
+            android:id="@+id/media_button"
             android:layout_marginTop="@dimen/indent_and_rounding"
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero"
@@ -47,6 +50,7 @@
             android:text="@string/media_library"
             android:textSize="@dimen/font"
             android:textColor="@color/black1"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/indent_and_rounding"
 
             app:icon="@drawable/media"
@@ -55,6 +59,7 @@
             app:iconTint="@color/black1"/>
 
         <Button
+            android:id="@+id/settings_button"
             android:layout_marginTop="@dimen/indent_and_rounding"
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero"
@@ -63,6 +68,7 @@
             android:text="@string/settings"
             android:textSize="@dimen/font"
             android:textColor="@color/black1"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/indent_and_rounding"
 
             app:icon="@drawable/setting"
