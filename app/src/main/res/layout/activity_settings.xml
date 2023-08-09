@@ -18,11 +18,13 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/settings_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/indent_12"
             android:src="@drawable/arrow"
             android:background="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             tools:ignore="ContentDescription" />
 
         <TextView
