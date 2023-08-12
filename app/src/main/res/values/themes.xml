@@ -7,8 +7,11 @@
         <item name="colorOnPrimary">@color/black1</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
-        <item name="colorSecondaryVariant">@color/light_gray</item>
+        <item name="colorSecondaryVariant">@color/text_gray</item>
         <item name="colorOnSecondary">@color/black</item>
+
+        <item name="textColorSearchUrl">@color/light_gray</item>
+        <item name="colorAccent">@color/blue</item>
 
     </style>
 </resources>

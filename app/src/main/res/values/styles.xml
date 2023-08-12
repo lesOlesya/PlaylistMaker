@@ -41,6 +41,22 @@
         <item name="android:translationZ">2dp</item>
     </style>
 
+    <style name="ArrowInHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginEnd">@dimen/dp_12</item>
+        <item name="android:src">@drawable/arrow</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:checked">false</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="Settings">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_indent</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="MySwitch" parent="Theme.AppCompat.Light">
         <item name="colorSwitchThumbNormal">@color/text_gray</item>
         <item name="colorControlActivated">@color/text_gray</item>

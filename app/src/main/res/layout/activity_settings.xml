@@ -13,24 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageButton
+        <ImageButton style="@style/ArrowInHeader"
             android:id="@+id/settings_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/dp_12"
-            android:src="@drawable/arrow"
-            android:background="?attr/colorPrimary"
-            android:foreground="?attr/selectableItemBackground"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <TextView style="@style/HeaderTextStyle"
             android:layout_marginStart="@dimen/dp_12"
             android:text="@string/settings"/>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_indent"
+    <FrameLayout style="@style/Settings"
         android:layout_marginTop="40dp">
 
         <TextView style="@style/TextStyle"
@@ -44,9 +36,8 @@
             android:layout_gravity="end|center"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_indent">
+    <FrameLayout style="@style/Settings"
+        android:id="@+id/share_app">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
@@ -59,9 +50,8 @@
             android:src="@drawable/share"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_indent">
+    <FrameLayout style="@style/Settings"
+        android:id="@+id/support">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
@@ -74,9 +64,8 @@
             android:src="@drawable/support"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_indent">
+    <FrameLayout style="@style/Settings"
+        android:id="@+id/terms_of_use">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
