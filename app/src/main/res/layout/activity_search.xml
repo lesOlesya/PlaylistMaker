@@ -31,9 +31,9 @@
 
         <EditText style="@style/TextStyle"
             android:id="@+id/edit_text"
-            android:paddingStart="@dimen/dp_12"
             android:layout_width="match_parent"
             android:layout_height="36dp"
+            android:paddingStart="36dp"
             android:hint="@string/search"
             android:maxLength="32"
             android:background="@drawable/search_background"
@@ -41,8 +41,14 @@
             android:inputType="text"
             android:textColor="@color/black1"
             android:textColorHint="?attr/colorSecondaryVariant"
-            android:drawableStart="@drawable/search_small"
             tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_12"
+            android:paddingTop="10dp"
+            android:src="@drawable/search_small"/>
 
         <ImageView
             android:id="@+id/clear_icon"

@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 
 class SearchActivity : AppCompatActivity() {
+    var searchText = ""
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,9 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             editText.setText("")
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+            editText.clearFocus()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -36,6 +40,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchText = editText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
 
@@ -45,8 +50,6 @@ class SearchActivity : AppCompatActivity() {
         }
         editText.addTextChangedListener(simpleTextWatcher)
 
-//        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-//        inputMethodManager?.hideSoftInputFromWindow(`currentView`.windowToken, 0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -55,6 +58,22 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+    }
+
+    override fun onSaveInstanceState(saveInstanceState: Bundle) {
+        saveInstanceState.putString(SEARCH_TEXT, searchText)
+        super.onSaveInstanceState(saveInstanceState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val editText = findViewById<EditText>(R.id.edit_text)
+        searchText = savedInstanceState.getString(SEARCH_TEXT, "")
+        editText.setText(searchText)
     }
 
 }
