@@ -22,9 +22,10 @@ class SettingsActivity : AppCompatActivity() {
 
         val shareButton = findViewById<FrameLayout>(R.id.share_app)
         shareButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO)
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.link_YP_android))
-            startActivity(intent)
+            startActivity(Intent.createChooser(intent, null))
         }
 
         val supportButton = findViewById<FrameLayout>(R.id.support)
