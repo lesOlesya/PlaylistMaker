@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        val shareButton = findViewById<FrameLayout>(R.id.share_app)
+        val shareButton = findViewById<FrameLayout>(R.id.flShareApp)
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
@@ -28,17 +28,18 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, null))
         }
 
-        val supportButton = findViewById<FrameLayout>(R.id.support)
+        val supportButton = findViewById<FrameLayout>(R.id.flSupport)
         supportButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_YP))
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message_YP))
-            startActivity(intent)
+            Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_YP))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.message_YP))
+                startActivity(this)
+            }
         }
 
-        val termsOfUseButton = findViewById<FrameLayout>(R.id.terms_of_use)
+        val termsOfUseButton = findViewById<FrameLayout>(R.id.flTermsOfUse)
         termsOfUseButton.setOnClickListener {
             val url = Uri.parse(getString(R.string.link_YP_terms_of_use))
             val intent = Intent(Intent.ACTION_VIEW, url)

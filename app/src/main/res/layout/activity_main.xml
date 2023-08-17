@@ -14,7 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginVertical="8dp"
+        android:layout_marginVertical="@dimen/dp_8"
         android:orientation="vertical">
 
         <Button style="@style/ButtonStyle"

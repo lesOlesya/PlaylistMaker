@@ -12,4 +12,7 @@
     <string name="subject_YP">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message_YP">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="link_YP_terms_of_use">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="track_name">Название трека</string>
+    <string name="artist_name">Имя исполнителя</string>
+    <string name="track_time">5:43</string>
 </resources>

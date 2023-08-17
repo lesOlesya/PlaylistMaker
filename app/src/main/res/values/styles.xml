@@ -34,7 +34,7 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="cornerRadius">@dimen/dp_16</item>
         <item name="iconGravity">textStart</item>
-        <item name="iconPadding">@dimen/indent_from_the_icon</item>
+        <item name="iconPadding">@dimen/dp_8</item>
         <item name="iconTint">@color/black1</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
@@ -51,7 +51,7 @@
 
     <style name="Settings">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/settings_indent</item>
+        <item name="android:layout_height">@dimen/list_indent</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 

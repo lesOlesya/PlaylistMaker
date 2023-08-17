@@ -37,7 +37,7 @@
     </FrameLayout>
 
     <FrameLayout style="@style/Settings"
-        android:id="@+id/share_app">
+        android:id="@+id/flShareApp">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
@@ -51,7 +51,7 @@
     </FrameLayout>
 
     <FrameLayout style="@style/Settings"
-        android:id="@+id/support">
+        android:id="@+id/flSupport">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
@@ -65,7 +65,7 @@
     </FrameLayout>
 
     <FrameLayout style="@style/Settings"
-        android:id="@+id/terms_of_use">
+        android:id="@+id/flTermsOfUse">
 
         <TextView style="@style/TextStyle"
             android:layout_gravity="start|center"
