@@ -11,7 +11,8 @@
         android:id="@+id/ivArtworkSmall"
         android:layout_marginVertical="@dimen/dp_8"
         android:layout_height="48dp"
-        android:layout_width="48dp"/>
+        android:layout_width="48dp"
+        android:background="@color/black1"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -29,7 +30,7 @@
             android:layout_marginTop="@dimen/dp_14"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="@string/track_name"/>
+            tools:text="Track Name"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -46,7 +47,7 @@
                 android:textColor="?attr/colorPrimaryVariant"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="@string/artist_name"/>
+                tools:text="Artist Name"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -59,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="?attr/colorPrimaryVariant"
-                android:text="@string/track_time"/>
+                tools:text="Track Time"/>
         </LinearLayout>
     </LinearLayout>
 
