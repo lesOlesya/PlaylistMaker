@@ -22,7 +22,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .load(item.artworkUrl100)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(2F, itemView.context)))
+            .transform(RoundedCorners(dpToPx(2F, ivArtwork.context)))
             .into(ivArtwork)
         tvTrackName.text = item.trackName
         tvArtistName.text = item.artistName
