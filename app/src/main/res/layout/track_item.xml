@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/rootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_indent"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/dp_12">
+
+    <ImageView
+        android:id="@+id/ivArtworkSmall"
+        android:layout_marginVertical="@dimen/dp_8"
+        android:layout_height="48dp"
+        android:layout_width="48dp"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        tools:ignore="RtlSymmetry">
+
+        <TextView style="@style/TextStyle"
+            android:id="@+id/tvTrackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_14"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Track Name"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="1dp">
+
+            <TextView style="@style/TextStyle"
+                android:id="@+id/tvArtistName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Artist Name"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dot"/>
+
+            <TextView style="@style/TextStyle"
+                android:id="@+id/tvTrackTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="?attr/colorPrimaryVariant"
+                tools:text="Track Time"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView android:id="@+id/ivArrowTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/arrow_2"/>
+</LinearLayout>

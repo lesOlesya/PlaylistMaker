@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    android:paddingStart="@dimen/dp_16"
-    android:paddingEnd="@dimen/dp_12"
-    android:paddingVertical="@dimen/dp_16"
     tools:context=".SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16">
 
         <ImageButton style="@style/ArrowInHeader"
             android:id="@+id/search_back"
@@ -27,7 +26,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp">
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_24">
 
         <EditText style="@style/TextStyle"
             android:id="@+id/edit_text"
@@ -55,8 +55,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="gone" />
+            android:src="@drawable/clear_button"
+            android:visibility="gone"/>
     </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:itemCount="14"
+        tools:listitem="@layout/track_item"/>
 </LinearLayout>

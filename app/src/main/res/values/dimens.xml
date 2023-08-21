@@ -2,11 +2,11 @@
 <resources>
     <dimen name="font_22">22sp</dimen>
     <dimen name="font_16">16sp</dimen>
+    <dimen name="dp_24">24dp</dimen>
     <dimen name="dp_16">16dp</dimen>
-    <dimen name="dp_12">12dp</dimen>
-    <dimen name="indent_from_the_icon">8dp</dimen>
-    <dimen name="zero">0dp</dimen>
-    <dimen name="settings_indent">60dp</dimen>
     <dimen name="dp_14">14dp</dimen>
-
+    <dimen name="dp_12">12dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="list_indent">60dp</dimen>
 </resources>
