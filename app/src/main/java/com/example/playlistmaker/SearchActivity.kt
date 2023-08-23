@@ -25,10 +25,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    private val iTunesSearchBaseUrl = "https://itunes.apple.com"
-
     private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesSearchBaseUrl)
+        .baseUrl(I_TUNES_SEARCH_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -38,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
     private val adapter = TrackAdapter(tracks)
 
     private var searchText = ""
+    private var lastQuery = ""
 
     private lateinit var editText: EditText
     private lateinit var nothingFound: LinearLayout
@@ -49,11 +48,11 @@ class SearchActivity : AppCompatActivity() {
 
         val backButton = findViewById<ImageButton>(R.id.search_back)
         editText = findViewById(R.id.edit_text)
-        nothingFound = findViewById(R.id.llNothingFound)
-        notInternet = findViewById(R.id.llNotInternet)
+        nothingFound = findViewById(R.id.nothing_found_layout)
+        notInternet = findViewById(R.id.no_internet_layout)
         val clearButton = findViewById<ImageView>(R.id.clear_icon)
         val updateButton = findViewById<Button>(R.id.button_update)
-        val rvTracks = findViewById<RecyclerView>(R.id.rvTracks)
+        val rvTracks = findViewById<RecyclerView>(R.id.tracks_recycler_view)
 
         rvTracks.adapter = adapter
 
@@ -71,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         updateButton.setOnClickListener {
-            findTracks()
+            findTracks(lastQuery)
         }
 
         editText.doOnTextChanged { s, start, before, count ->
@@ -82,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (editText.text.isNotEmpty()) {
-                    findTracks()
+                    findTracks(editText.text.toString())
                 }
                 true
             }
@@ -92,14 +91,14 @@ class SearchActivity : AppCompatActivity() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun showMessage(text: String) {
-        if (text == "nothing found") {
+    private fun showMessage(error: Int) {
+        if (error == 1) {
             notInternet.visibility = View.GONE
             nothingFound.visibility = View.VISIBLE
             tracks.clear()
             adapter.notifyDataSetChanged()
 
-        } else if (text == "not internet"){
+        } else if (error == 2){
             nothingFound.visibility = View.GONE
             notInternet.visibility = View.VISIBLE
             tracks.clear()
@@ -110,8 +109,8 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun findTracks() {
-        iTunesSearchService.search(editText.text.toString()).enqueue(object :
+    private fun findTracks(query: String) {
+        iTunesSearchService.search(query).enqueue(object :
             Callback<TracksResponse> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<TracksResponse>,
@@ -124,17 +123,19 @@ class SearchActivity : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                     }
                     if (tracks.isEmpty()) {
-                        showMessage("nothing found")
+                        showMessage(NOTHING_FOUND)
                     } else {
-                        showMessage("")
+                        showMessage(0)
                     }
                 } else {
-                    showMessage("not internet")
+                    lastQuery = query
+                    showMessage(NO_INTERNET)
                 }
             }
 
             override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                showMessage("not internet")
+                lastQuery = query
+                showMessage(NO_INTERNET)
             }
 
         })
@@ -161,6 +162,10 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val I_TUNES_SEARCH_BASE_URL = "https://itunes.apple.com"
+        private const val NOTHING_FOUND = 1
+        private const val NO_INTERNET = 2
     }
+
 
 }
