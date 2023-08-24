@@ -41,7 +41,9 @@
             android:inputType="text"
             android:textColor="@color/black1"
             android:textColorHint="?attr/colorSecondaryVariant"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,13 +61,66 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTracks"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_24"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        tools:itemCount="14"
-        tools:listitem="@layout/track_item"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracks_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:itemCount="1"
+            tools:listitem="@layout/track_item"/>
+
+        <LinearLayout android:id="@+id/no_internet_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="108dp"
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/error_not_internet"/>
+
+            <TextView style="@style/ErrorTextStyle"
+                android:layout_marginTop="@dimen/dp_16"
+                android:gravity="center"
+                android:text="@string/error_not_internet"/>
+
+            <Button style="@style/UpdateButtonStyle"
+                android:id="@+id/button_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24"
+                android:text="@string/update"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nothing_found_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="108dp"
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/error_nothing_found"/>
+
+            <TextView style="@style/ErrorTextStyle"
+                android:layout_marginTop="@dimen/dp_16"
+                android:gravity="center"
+                android:text="@string/error_nothing_found"/>
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>
