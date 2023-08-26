@@ -10,7 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 
-const val PLAYLIST_MAKER_EXAMPLE_PREFERENCES = "playlist_maker_example_preferences"
+const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 const val THEME_SWITCHER_KEY = "key_for_theme_switcher"
 
 class SettingsActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_EXAMPLE_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 
         val backButton = findViewById<ImageButton>(R.id.settings_back)
         backButton.setOnClickListener {

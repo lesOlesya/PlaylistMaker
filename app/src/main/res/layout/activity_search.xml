@@ -65,6 +65,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout android:id="@+id/search_history_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/HeaderTextStyle"
+                android:layout_marginTop="48dp"
+                android:textSize="19sp"
+                android:text="@string/you_searched"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_history_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/dp_24"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:itemCount="3"
+                tools:listitem="@layout/track_item"/>
+
+            <Button style="@style/SmallButtonStyle"
+                android:id="@+id/button_clear_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24"
+                android:text="@string/clear_history"/>
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracks_recycler_view"
             android:layout_width="match_parent"
@@ -72,7 +104,7 @@
             android:layout_marginTop="@dimen/dp_24"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-            tools:itemCount="1"
+            tools:itemCount="3"
             tools:listitem="@layout/track_item"/>
 
         <LinearLayout android:id="@+id/no_internet_layout"
@@ -94,7 +126,7 @@
                 android:gravity="center"
                 android:text="@string/error_not_internet"/>
 
-            <Button style="@style/UpdateButtonStyle"
+            <Button style="@style/SmallButtonStyle"
                 android:id="@+id/button_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

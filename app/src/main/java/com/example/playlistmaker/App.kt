@@ -11,7 +11,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_EXAMPLE_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 
         darkTheme = sharedPrefs.getString(THEME_SWITCHER_KEY, darkTheme.toString()).toBoolean()
         switchTheme(darkTheme)
