@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/rootLayout"
+<LinearLayout android:id="@+id/root_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_indent"
     android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/dp_12">
+    android:paddingHorizontal="@dimen/dp_12"
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/ivArtworkSmall"

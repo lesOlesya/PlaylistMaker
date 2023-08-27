@@ -22,19 +22,15 @@
             android:text="@string/settings"/>
     </LinearLayout>
 
-    <FrameLayout style="@style/Settings"
-        android:layout_marginTop="40dp">
-
-        <TextView style="@style/TextStyle"
-            android:layout_gravity="start|center"
-            android:text="@string/dark_theme"/>
-
-        <androidx.appcompat.widget.SwitchCompat android:theme="@style/MySwitch"
-            android:id="@+id/switch_compat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center"/>
-    </FrameLayout>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
+        android:theme="@style/MySwitch"
+        style="@style/TextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_indent"
+        android:layout_marginTop="40dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/dark_theme"/>
 
     <FrameLayout style="@style/Settings"
         android:id="@+id/flShareApp">

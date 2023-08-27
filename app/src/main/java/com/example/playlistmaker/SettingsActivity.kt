@@ -8,6 +8,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import com.google.android.material.switchmaterial.SwitchMaterial
+
+const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+const val THEME_SWITCHER_KEY = "key_for_theme_switcher"
 
 class SettingsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -15,10 +19,21 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+
         val backButton = findViewById<ImageButton>(R.id.settings_back)
         backButton.setOnClickListener {
             finish()
         }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit()
+                .putString(THEME_SWITCHER_KEY, checked.toString())
+                .apply()
+        }
+        themeSwitcher.isChecked
 
         val shareButton = findViewById<FrameLayout>(R.id.flShareApp)
         shareButton.setOnClickListener {
@@ -46,4 +61,5 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 }

@@ -19,7 +19,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val tvArtistName: TextView = itemView.findViewById(R.id.tvArtistName)
     private val tvTrackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
 
-    fun bind(track: Track) {
+    fun bind(track: Track, listener: TrackAdapter.Listener) {
         val trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         Glide.with(itemView)
@@ -32,6 +32,10 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         tvTrackName.text = track.trackName
         tvArtistName.text = track.artistName
         tvTrackTime.text = trackTime
+
+        itemView.setOnClickListener {
+            listener.onClick(track)
+        }
     }
 
     private fun dpToPx(dp: Float, context: Context): Int {
