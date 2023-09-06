@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_indent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/dp_12"
     android:foreground="?attr/selectableItemBackground">
@@ -11,12 +11,13 @@
     <ImageView
         android:id="@+id/ivArtworkSmall"
         android:layout_marginVertical="@dimen/dp_8"
+        android:layout_gravity="center_vertical"
         android:layout_height="48dp"
         android:layout_width="48dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:layout_marginStart="@dimen/dp_8"
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dp_14"
             android:layout_marginTop="1dp">
 
             <TextView style="@style/TextStyle"
@@ -51,7 +53,7 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:src="@drawable/dot"/>
 
             <TextView style="@style/TextStyle"
