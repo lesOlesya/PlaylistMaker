@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -23,7 +25,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
@@ -195,11 +196,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         searchHistory.addTrack(track)
         adapterHistory.tracks = searchHistory.getHistory()
         adapterHistory.notifyDataSetChanged()
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra("TrackId", track.trackId)
+        startActivity(intent)
     }
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val I_TUNES_SEARCH_BASE_URL = "https://itunes.apple.com"
+        const val I_TUNES_SEARCH_BASE_URL = "https://itunes.apple.com"
         private const val NOTHING_FOUND = 1
         private const val NO_INTERNET = 2
     }
