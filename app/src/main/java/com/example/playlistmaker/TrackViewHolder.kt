@@ -14,6 +14,7 @@ import java.util.Locale
 
 class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
+
     private val ivArtwork: ImageView = itemView.findViewById(R.id.ivArtworkSmall)
     private val tvTrackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val tvArtistName: TextView = itemView.findViewById(R.id.tvArtistName)
@@ -43,4 +44,5 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             dp,
             context.resources.displayMetrics).toInt()
     }
+
 }
