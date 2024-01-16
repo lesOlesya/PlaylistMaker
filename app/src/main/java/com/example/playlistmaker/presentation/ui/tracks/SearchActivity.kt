@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.tracks
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -18,11 +16,14 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
+import com.example.playlistmaker.presentation.ui.player.AudioPlayerActivity
+import com.example.playlistmaker.data.network.ITunesSearchApi
+import com.example.playlistmaker.presentation.ui.settings.PLAYLIST_MAKER_PREFERENCES
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.dto.TracksSearchResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,9 +95,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
         clearButton.setOnClickListener {
             editText.setText("")
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-            editText.clearFocus()
             tracks.clear()
             adapter.notifyDataSetChanged()
         }
@@ -140,6 +138,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        editText.requestFocus()
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun showMessage(error: Int) {
         if (error == 1) {
@@ -165,10 +168,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         rvTracks.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         iTunesSearchService.search(query).enqueue(object :
-            Callback<TracksResponse> {
+            Callback<TracksSearchResponse> {
             @SuppressLint("NotifyDataSetChanged")
-            override fun onResponse(call: Call<TracksResponse>,
-                                    response: Response<TracksResponse>
+            override fun onResponse(call: Call<TracksSearchResponse>,
+                                    response: Response<TracksSearchResponse>
             ) {
                 progressBar.visibility = View.GONE // Прячем ProgressBar после успешного выполнения запроса
                 if (response.code() == 200) {
@@ -189,7 +192,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
                 }
             }
 
-            override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
                 progressBar.visibility = View.GONE // Прячем ProgressBar после выполнения запроса с ошибкой
                 lastQuery = query
                 showMessage(NO_INTERNET)
@@ -233,7 +236,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onClick(track: Track) {
-//        Toast.makeText(this, "click", Toast.LENGTH_LONG).show()
         if (clickDebounce()) {
             searchHistory.addTrack(track)
             adapterHistory.tracks = searchHistory.getHistory()

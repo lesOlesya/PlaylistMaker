@@ -2,7 +2,8 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.presentation.ui.settings.PLAYLIST_MAKER_PREFERENCES
+import com.example.playlistmaker.presentation.ui.settings.THEME_SWITCHER_KEY
 
 class App : Application() {
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.domain.models
 
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -17,4 +17,6 @@ data class Track(
 ) {
     fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
     fun getTrackTime() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)!!
+
+    //в будущем, когда сделаю TrackDto, из Track уберу эти функции
 }
