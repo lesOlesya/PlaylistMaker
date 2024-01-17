@@ -8,7 +8,7 @@ class GetTrackByIdUseCase(private val repository: TracksRepository) {
     fun execute(trackId: Int): Track? {
 
         val tracks = repository.getTracks()
-        for (i in 0 until tracks.size) {
+        for (i in tracks.indices) {
             if (trackId == tracks[i].trackId) return tracks[i]
         }
         return null

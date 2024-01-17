@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.ui.tracks
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,11 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.widget.doOnTextChanged
@@ -21,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.presentation.ui.player.AudioPlayerActivity
 import com.example.playlistmaker.data.network.ITunesSearchApi
 import com.example.playlistmaker.presentation.ui.settings.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +26,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+
+    private lateinit var binding: ActivitySearchBinding
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(I_TUNES_SEARCH_BASE_URL)
@@ -66,7 +63,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
     @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 
@@ -74,22 +72,21 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         val searchHistoryTracks = searchHistory.getHistory()
         adapterHistory = TrackAdapter(searchHistoryTracks, this)
 
-        val backButton = findViewById<ImageButton>(R.id.search_back)
-        editText = findViewById(R.id.edit_text)
-        nothingFound = findViewById(R.id.nothing_found_layout)
-        notInternet = findViewById(R.id.no_internet_layout)
-        progressBar = findViewById(R.id.progressBar)
-        rvTracks = findViewById(R.id.tracks_recycler_view)
-        val clearButton = findViewById<ImageView>(R.id.clear_icon)
-        val updateButton = findViewById<Button>(R.id.button_update)
-        val llSearchHistory = findViewById<LinearLayout>(R.id.search_history_layout)
-        val rvSearchHistory = findViewById<RecyclerView>(R.id.search_history_recycler_view)
-        val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
+        editText = binding.editText
+        nothingFound = binding.nothingFoundLayout
+        notInternet = binding.noInternetLayout
+        progressBar = binding.progressBar
+        rvTracks = binding.tracksRecyclerView
+        val clearButton = binding.clearIcon
+        val updateButton = binding.buttonUpdate
+        val llSearchHistory = binding.searchHistoryLayout
+        val rvSearchHistory = binding.searchHistoryRecyclerView
+        val clearHistoryButton = binding.buttonClearHistory
 
         rvTracks.adapter = adapter
         rvSearchHistory.adapter = adapterHistory
 
-        backButton.setOnClickListener {
+        binding.searchBack.setOnClickListener {
             finish()
         }
 

@@ -8,21 +8,24 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.domain.models.PlayerStates
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl(private val context: Context,
-                           private val play: ToggleButton,
-                           private val tvTrackTime: TextView,
-                           private val url: String?) : PlayerRepository {
+class PlayerRepositoryImpl(
+    private val context: Context,
+    private val play: ToggleButton,
+    private val tvTrackTime: TextView,
+    private val url: String?
+) : PlayerRepository {
 
     private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private var playerState = PlayerStates.STATE_DEFAULT
     private val timerRunnable = Runnable { createUpdateTimerTask() }
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun createUpdateTimerTask() {
-        if (playerState == STATE_PLAYING) {
+        if (playerState == PlayerStates.STATE_PLAYING) {
             tvTrackTime.text = SimpleDateFormat(
                 "mm:ss",
                 Locale.getDefault()
@@ -35,11 +38,11 @@ class PlayerRepositoryImpl(private val context: Context,
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+            playerState = PlayerStates.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
             play.isChecked = false
-            playerState = STATE_PREPARED
+            playerState = PlayerStates.STATE_PREPARED
             mainThreadHandler.removeCallbacks(timerRunnable)
             tvTrackTime.text = "00:00"
         }
@@ -48,20 +51,20 @@ class PlayerRepositoryImpl(private val context: Context,
     override fun startPlayer() {
         mediaPlayer.start()
         play.isChecked = true
-        playerState = STATE_PLAYING
+        playerState = PlayerStates.STATE_PLAYING
         mainThreadHandler.post(timerRunnable)
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
         play.isChecked = false
-        playerState = STATE_PAUSED
+        playerState = PlayerStates.STATE_PAUSED
         mainThreadHandler.removeCallbacks(timerRunnable)
     }
 
     override fun playbackControl() {
-        when(playerState) {
-            STATE_DEFAULT -> {
+        when (playerState) {
+            PlayerStates.STATE_DEFAULT -> {
                 play.isChecked = true
                 Toast.makeText(
                     context,
@@ -70,10 +73,12 @@ class PlayerRepositoryImpl(private val context: Context,
                 ).show()
                 play.isChecked = false
             }
-            STATE_PLAYING -> {
+
+            PlayerStates.STATE_PLAYING -> {
                 pausePlayer()
             }
-            STATE_PREPARED, STATE_PAUSED -> {
+
+            PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
                 startPlayer()
             }
         }
@@ -85,10 +90,6 @@ class PlayerRepositoryImpl(private val context: Context,
     }
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val DELAY = 400L
     }
 

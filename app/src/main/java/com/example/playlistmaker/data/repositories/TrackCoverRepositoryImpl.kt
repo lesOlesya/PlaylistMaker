@@ -9,8 +9,10 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.TrackCoverRepository
 import com.example.playlistmaker.domain.models.Track
 
-class TrackCoverRepositoryImpl(private val context: Context, private val track: Track,
-                               private val placeForCover: ImageView) : TrackCoverRepository {
+class TrackCoverRepositoryImpl(
+    private val context: Context, private val track: Track,
+    private val placeForCover: ImageView
+) : TrackCoverRepository {
 
     override fun getTrackCover() {
         Glide.with(context)
@@ -25,6 +27,7 @@ class TrackCoverRepositoryImpl(private val context: Context, private val track: 
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
-            context.resources.displayMetrics).toInt()
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

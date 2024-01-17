@@ -1,70 +1,56 @@
 package com.example.playlistmaker.presentation.ui.player
 
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.R
-import com.example.playlistmaker.data.repositories.PlayerRepositoryImpl
-import com.example.playlistmaker.data.repositories.TrackCoverRepositoryImpl
-import com.example.playlistmaker.data.repositories.TracksRepositoryImpl
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.usecases.GetTrackByIdUseCase
-import com.example.playlistmaker.domain.usecases.GetTrackCoverUseCase
+import com.example.playlistmaker.Creator.providePlayerInteractor
+import com.example.playlistmaker.Creator.provideTrackByIdUseCase
+import com.example.playlistmaker.Creator.provideTrackCoverUseCase
+import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private val trackByIdRepository by lazy { TracksRepositoryImpl(applicationContext) }
-    private val getTrackByIdUseCase by lazy { GetTrackByIdUseCase(trackByIdRepository) }
+    private lateinit var binding: ActivityAudioPlayerBinding
+
+    private val getTrackByIdUseCase by lazy { provideTrackByIdUseCase(applicationContext) }
 
     private lateinit var play: ToggleButton
     private lateinit var tvTrackTime: TextView
     private var url: String? = null
 
-    private val playerRepository by lazy { PlayerRepositoryImpl(applicationContext, play, tvTrackTime, url) }
-    private val playerInteractorImpl by lazy { PlayerInteractorImpl(playerRepository) }
+    private val playerInteractorImpl by lazy { providePlayerInteractor(applicationContext, play, tvTrackTime, url) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio_player)
+        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val trackId = intent.getIntExtra("TrackId", 0)
         val track = getTrackByIdUseCase.execute(trackId)
 
-        play = findViewById(R.id.play_button)
-        tvTrackTime = findViewById(R.id.track_time_tv_audio_player)
-        val backButton = findViewById<ImageButton>(R.id.audio_player_back)
-        val ivArtwork =  findViewById<ImageView>(R.id.artwork_iv_audio_player)
-        val tvTrackName = findViewById<TextView>(R.id.track_name_tv_audio_player)
-        val tvArtistName = findViewById<TextView>(R.id.artist_name_tv_audio_player)
-        val tvDuration = findViewById<TextView>(R.id.duration_tv_audio_player)
-        val tvAlbum = findViewById<TextView>(R.id.album_tv_audio_player)
-        val tvYear = findViewById<TextView>(R.id.year_tv_audio_player)
-        val tvGenre = findViewById<TextView>(R.id.genre_tv_audio_player)
-        val tvCountry = findViewById<TextView>(R.id.country_tv_audio_player)
+        play = binding.playButton
+        tvTrackTime = binding.trackTimeTvAudioPlayer
 
-        val trackCoverRepository = TrackCoverRepositoryImpl(this, track!!, ivArtwork)
-        val getTrackCoverUseCase = GetTrackCoverUseCase(trackCoverRepository)
+        val getTrackCoverUseCase = provideTrackCoverUseCase(this, track!!, binding.artworkIvAudioPlayer)
 
         getTrackCoverUseCase.execute()
 
-        backButton.setOnClickListener {
+        binding.audioPlayerBack.setOnClickListener {
             finish()
         }
 
-        tvTrackName.text = track.trackName
-        tvArtistName.text = track.artistName
-        tvDuration.text = track.getTrackTime()
-        tvAlbum.text = track.collectionName ?: " "
-        tvYear.text = track.releaseDate?.substring(0, 4) ?: " "
-        tvGenre.text = track.primaryGenreName ?: " "
-        tvCountry.text = track.country ?: " "
+        binding.trackNameTvAudioPlayer.text = track.trackName
+        binding.artistNameTvAudioPlayer.text = track.artistName
+        binding.durationTvAudioPlayer.text = track.getTrackTime()
+        binding.albumTvAudioPlayer.text = track.collectionName.orEmpty()
+        binding.yearTvAudioPlayer.text = track.releaseDate?.substring(0, 4).orEmpty()
+        binding.genreTvAudioPlayer.text = track.primaryGenreName.orEmpty()
+        binding.countryTvAudioPlayer.text = track.country.orEmpty()
         url = track.previewUrl
 
-        if (url != null) playerInteractorImpl.preparePlayer()
+        url?.let { playerInteractorImpl.preparePlayer() } //if (url != null) playerInteractorImpl.preparePlayer()
 
         play.setOnClickListener {
             playerInteractorImpl.playbackControl()

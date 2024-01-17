@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 
 class TracksRepositoryImpl(context: Context) : TracksRepository {
 
-    val sharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         PLAYLIST_MAKER_PREFERENCES,
         Context.MODE_PRIVATE
     )
