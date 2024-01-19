@@ -1,32 +1,32 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.settings
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageButton
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 const val THEME_SWITCHER_KEY = "key_for_theme_switcher"
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
+
+    private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 
-        val backButton = findViewById<ImageButton>(R.id.settings_back)
-        backButton.setOnClickListener {
+        binding.settingsBack.setOnClickListener {
             finish()
         }
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val themeSwitcher = binding.themeSwitcher
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
             sharedPrefs.edit()
@@ -35,16 +35,14 @@ class SettingsActivity : AppCompatActivity() {
         }
         themeSwitcher.isChecked
 
-        val shareButton = findViewById<FrameLayout>(R.id.flShareApp)
-        shareButton.setOnClickListener {
+        binding.flShareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.link_YP_android))
             startActivity(Intent.createChooser(intent, null))
         }
 
-        val supportButton = findViewById<FrameLayout>(R.id.flSupport)
-        supportButton.setOnClickListener {
+        binding.flSupport.setOnClickListener {
             Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
@@ -54,8 +52,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        val termsOfUseButton = findViewById<FrameLayout>(R.id.flTermsOfUse)
-        termsOfUseButton.setOnClickListener {
+        binding.flTermsOfUse.setOnClickListener {
             val url = Uri.parse(getString(R.string.link_YP_terms_of_use))
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)

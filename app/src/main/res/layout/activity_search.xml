@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    tools:context=".SearchActivity">
+    tools:context=".presentation.ui.tracks.SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +32,8 @@
         <EditText style="@style/TextStyle"
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:paddingStart="36dp"
+            android:layout_height="@dimen/dp_36"
+            android:paddingStart="@dimen/dp_36"
             android:hint="@string/search"
             android:maxLength="32"
             android:background="@drawable/search_background"
@@ -66,8 +66,8 @@
         android:layout_height="match_parent">
 
         <ProgressBar android:id="@+id/progressBar"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="144dp"
             android:indeterminateTint="@color/blue"
@@ -82,7 +82,7 @@
 
             <TextView
                 style="@style/HeaderTextStyle"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="@dimen/dp_48"
                 android:textSize="19sp"
                 android:text="@string/you_searched"/>
 
@@ -118,7 +118,7 @@
         <LinearLayout android:id="@+id/no_internet_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="108dp"
+            android:layout_marginTop="@dimen/dp_108"
             android:layout_marginHorizontal="@dimen/dp_24"
             android:orientation="vertical"
             android:gravity="center"
@@ -145,7 +145,7 @@
         <LinearLayout android:id="@+id/nothing_found_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="108dp"
+            android:layout_marginTop="@dimen/dp_108"
             android:layout_marginHorizontal="@dimen/dp_24"
             android:orientation="vertical"
             android:gravity="center"
