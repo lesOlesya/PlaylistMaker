@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.repositories
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -16,7 +17,7 @@ class TrackCoverRepositoryImpl(
 
     override fun getTrackCover() {
         Glide.with(context)
-            .load(track.getCoverArtwork())
+            .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
             .placeholder(R.drawable.placeholder_big)
             .centerCrop()
             .transform(RoundedCorners(dpToPx(8F, placeForCover.context)))

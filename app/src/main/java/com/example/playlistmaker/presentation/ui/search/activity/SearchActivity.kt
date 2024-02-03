@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.tracks
+package com.example.playlistmaker.presentation.ui.search.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,32 +13,21 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.presentation.ui.player.AudioPlayerActivity
-import com.example.playlistmaker.data.network.ITunesSearchApi
-import com.example.playlistmaker.presentation.ui.settings.PLAYLIST_MAKER_PREFERENCES
+import com.example.playlistmaker.creator.Creator.provideSearchHistoryInteractor
+import com.example.playlistmaker.creator.Creator.provideTracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.presentation.ui.player.activity.AudioPlayerActivity
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(I_TUNES_SEARCH_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesSearchService = retrofit.create(ITunesSearchApi::class.java)
+    private val tracksInteractor by lazy { provideTracksInteractor() }
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(tracks, this)
-
 
     private var searchText = ""
     private var lastQuery = ""
@@ -49,10 +38,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
     private lateinit var editText: EditText
     private lateinit var nothingFound: LinearLayout
     private lateinit var notInternet: LinearLayout
-    private lateinit var searchHistory: SearchHistory
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
+
+    private val searchHistory by lazy { provideSearchHistoryInteractor(applicationContext) }
 
     private val searchRunnable = Runnable {
         if (editText.text.isNotEmpty()) {
@@ -66,9 +56,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-
-        searchHistory = SearchHistory(sharedPreferences)
         val searchHistoryTracks = searchHistory.getHistory()
         adapterHistory = TrackAdapter(searchHistoryTracks, this)
 
@@ -160,43 +147,67 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
     }
 
     private fun findTracks(query: String) {
-        nothingFound.visibility = View.GONE
-        notInternet.visibility = View.GONE
-        rvTracks.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
-        iTunesSearchService.search(query).enqueue(object :
-            Callback<TracksSearchResponse> {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onResponse(call: Call<TracksSearchResponse>,
-                                    response: Response<TracksSearchResponse>
-            ) {
-                progressBar.visibility = View.GONE // Прячем ProgressBar после успешного выполнения запроса
-                if (response.code() == 200) {
-                    tracks.clear()
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        rvTracks.visibility = View.VISIBLE
-                        tracks.addAll(response.body()?.results!!)
-                        adapter.notifyDataSetChanged()
-                    }
-                    if (tracks.isEmpty()) {
-                        showMessage(NOTHING_FOUND)
-                    } else {
-                        showMessage(0)
-                    }
+    nothingFound.visibility = View.GONE
+    notInternet.visibility = View.GONE
+    rvTracks.visibility = View.GONE
+    progressBar.visibility = View.VISIBLE
+    tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
+        @SuppressLint("NotifyDataSetChanged")
+        override fun consume(foundTracks: List<Track>) {
+            handler.post {
+                progressBar.visibility = View.GONE
+                tracks.clear()
+                tracks.addAll(foundTracks)
+                rvTracks.visibility = View.VISIBLE
+                adapter.notifyDataSetChanged()
+                if (tracks.isEmpty()) {
+                    showMessage(SearchActivity.NOTHING_FOUND)
                 } else {
-                    lastQuery = query
-                    showMessage(NO_INTERNET)
+                    showMessage(0)
                 }
             }
+        }
+    })
+}
 
-            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-                progressBar.visibility = View.GONE // Прячем ProgressBar после выполнения запроса с ошибкой
-                lastQuery = query
-                showMessage(NO_INTERNET)
-            }
-
-        })
-    }
+//    private fun findTracks(query: String) {
+//        nothingFound.visibility = View.GONE
+//        notInternet.visibility = View.GONE
+//        rvTracks.visibility = View.GONE
+//        progressBar.visibility = View.VISIBLE
+//        iTunesSearchService.search(query).enqueue(object :
+//            Callback<TracksSearchResponse> {
+//            @SuppressLint("NotifyDataSetChanged")
+//            override fun onResponse(call: Call<TracksSearchResponse>,
+//                                    response: Response<TracksSearchResponse>
+//            ) {
+//                progressBar.visibility = View.GONE // Прячем ProgressBar после успешного выполнения запроса
+//                if (response.code() == 200) {
+//                    tracks.clear()
+//                    if (response.body()?.results?.isNotEmpty() == true) {
+//                        rvTracks.visibility = View.VISIBLE
+//                        tracks.addAll(response.body()?.results!!)
+//                        adapter.notifyDataSetChanged()
+//                    }
+//                    if (tracks.isEmpty()) {
+//                        showMessage(NOTHING_FOUND)
+//                    } else {
+//                        showMessage(0)
+//                    }
+//                } else {
+//                    lastQuery = query
+//                    showMessage(NO_INTERNET)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
+//                progressBar.visibility = View.GONE // Прячем ProgressBar после выполнения запроса с ошибкой
+//                lastQuery = query
+//                showMessage(NO_INTERNET)
+//            }
+//
+//        })
+//    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -245,7 +256,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val I_TUNES_SEARCH_BASE_URL = "https://itunes.apple.com"
         private const val NOTHING_FOUND = 1
         private const val NO_INTERNET = 2
         private const val CLICK_DEBOUNCE_DELAY = 1000L

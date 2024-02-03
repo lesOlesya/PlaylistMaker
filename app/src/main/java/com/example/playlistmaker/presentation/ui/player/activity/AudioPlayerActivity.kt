@@ -1,18 +1,23 @@
-package com.example.playlistmaker.presentation.ui.player
+package com.example.playlistmaker.presentation.ui.player.activity
 
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.Creator.providePlayerInteractor
-import com.example.playlistmaker.Creator.provideTrackByIdUseCase
-import com.example.playlistmaker.Creator.provideTrackCoverUseCase
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.creator.Creator.providePlayerInteractor
+import com.example.playlistmaker.creator.Creator.provideTrackByIdUseCase
+import com.example.playlistmaker.creator.Creator.provideTrackCoverUseCase
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioPlayerBinding
+    private lateinit var viewModel: PlayerViewModel
 
     private val getTrackByIdUseCase by lazy { provideTrackByIdUseCase(applicationContext) }
 
@@ -26,6 +31,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
 
         val trackId = intent.getIntExtra("TrackId", 0)
         val track = getTrackByIdUseCase.execute(trackId)
@@ -43,7 +50,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.trackNameTvAudioPlayer.text = track.trackName
         binding.artistNameTvAudioPlayer.text = track.artistName
-        binding.durationTvAudioPlayer.text = track.getTrackTime()
+        binding.durationTvAudioPlayer.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)!!
         binding.albumTvAudioPlayer.text = track.collectionName.orEmpty()
         binding.yearTvAudioPlayer.text = track.releaseDate?.substring(0, 4).orEmpty()
         binding.genreTvAudioPlayer.text = track.primaryGenreName.orEmpty()

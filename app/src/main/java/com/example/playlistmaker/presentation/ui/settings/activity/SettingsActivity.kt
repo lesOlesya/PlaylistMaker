@@ -1,12 +1,14 @@
-package com.example.playlistmaker.presentation.ui.settings
+package com.example.playlistmaker.presentation.ui.settings.activity
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 
 const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 const val THEME_SWITCHER_KEY = "key_for_theme_switcher"
@@ -14,11 +16,14 @@ const val THEME_SWITCHER_KEY = "key_for_theme_switcher"
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var viewModel: SettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 

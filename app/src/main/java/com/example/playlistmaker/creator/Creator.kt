@@ -1,22 +1,49 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.creator
 
 import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.repositories.PlayerRepositoryImpl
+import com.example.playlistmaker.data.repositories.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.repositories.TrackCoverRepositoryImpl
 import com.example.playlistmaker.data.repositories.TracksRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.TrackCoverRepository
+import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.GetTrackByIdUseCase
 import com.example.playlistmaker.domain.usecases.GetTrackCoverUseCase
 
 object Creator {
+
+
+    private fun getTracksRepository(): TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient())
+    }
+
+    fun provideTracksInteractor(): TracksInteractor {
+        return TracksInteractorImpl(getTracksRepository())
+    }
+
+
+    private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(context)
+    }
+
+    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
+    }
+
+
     private fun getPlayerRepository(
         context: Context,
         play: ToggleButton,
@@ -36,8 +63,8 @@ object Creator {
     }
 
 
-    private fun getTrackByIdRepository(context: Context): TracksRepository {
-        return TracksRepositoryImpl(context)
+    private fun getTrackByIdRepository(context: Context): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(context)
     }
 
     fun provideTrackByIdUseCase(context: Context): GetTrackByIdUseCase {

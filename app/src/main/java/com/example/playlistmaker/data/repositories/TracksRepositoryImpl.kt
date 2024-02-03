@@ -1,25 +1,32 @@
 package com.example.playlistmaker.data.repositories
 
-import android.content.Context
+import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.dto.TracksSearchRequest
+import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.ui.settings.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.presentation.ui.tracks.SEARCH_HISTORY_KEY
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
-class TracksRepositoryImpl(context: Context) : TracksRepository {
+class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
-    private val sharedPreferences = context.getSharedPreferences(
-        PLAYLIST_MAKER_PREFERENCES,
-        Context.MODE_PRIVATE
-    )
-
-    override fun getTracks(): List<Track> {
-
-        val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null)
-        val type = object : TypeToken<ArrayList<Track>>() {}.type
-        val tracks: ArrayList<Track> = Gson().fromJson(json, type)
-        return tracks
+    override fun searchTracks(expression: String): List<Track> {
+        val response = networkClient.doRequest(TracksSearchRequest(expression))
+        if (response.resultCode == 200) {
+            return (response as TracksSearchResponse).results.map {
+                Track(
+                    it.trackId,
+                    it.trackName ?: "",
+                    it.artistName ?: "",
+                    it.trackTimeMillis ,
+                    it.artworkUrl100 ?: "",
+                    it.collectionName,
+                    it.releaseDate,
+                    it.primaryGenreName,
+                    it.country,
+                    it.previewUrl
+                )
+            }
+        } else {
+            return emptyList()
+        }
     }
 }

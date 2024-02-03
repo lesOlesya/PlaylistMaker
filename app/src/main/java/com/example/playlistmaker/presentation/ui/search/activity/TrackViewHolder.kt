@@ -1,22 +1,19 @@
-package com.example.playlistmaker.presentation.ui.tracks
+package com.example.playlistmaker.presentation.ui.search.activity
 
 import android.content.Context
 import android.util.TypedValue
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.domain.models.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-    private val ivArtwork: ImageView = itemView.findViewById(R.id.ivArtworkSmall)
-    private val tvTrackName: TextView = itemView.findViewById(R.id.tvTrackName)
-    private val tvArtistName: TextView = itemView.findViewById(R.id.tvArtistName)
-    private val tvTrackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
+    private val ivArtwork = binding.ivArtworkSmall
 
     fun bind(track: Track, listener: TrackAdapter.Listener) {
 
@@ -27,9 +24,9 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(dpToPx(2F, ivArtwork.context)))
             .into(ivArtwork)
 
-        tvTrackName.text = track.trackName
-        tvArtistName.text = track.artistName
-        tvTrackTime.text = track.getTrackTime()
+        binding.tvTrackName.text = track.trackName
+        binding.tvArtistName.text = track.artistName
+        binding.tvTrackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)!!
 
         itemView.setOnClickListener {
             listener.onClick(track)
