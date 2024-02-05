@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
+import com.example.playlistmaker.util.TracksApplication
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val themeSwitcher = binding.themeSwitcher
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+            (applicationContext as TracksApplication).switchTheme(checked)
             sharedPrefs.edit()
                 .putString(THEME_SWITCHER_KEY, checked.toString())
                 .apply()

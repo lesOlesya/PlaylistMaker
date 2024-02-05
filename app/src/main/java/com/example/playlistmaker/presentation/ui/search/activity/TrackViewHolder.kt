@@ -15,7 +15,7 @@ class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewH
 
     private val ivArtwork = binding.ivArtworkSmall
 
-    fun bind(track: Track, listener: TrackAdapter.Listener) {
+    fun bind(track: Track, listener: TrackAdapter.TrackClickListener) {
 
         Glide.with(itemView)
             .load(track.artworkUrl100)
@@ -29,7 +29,7 @@ class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewH
         binding.tvTrackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)!!
 
         itemView.setOnClickListener {
-            listener.onClick(track)
+            listener.onTrackClick(track)
         }
     }
 

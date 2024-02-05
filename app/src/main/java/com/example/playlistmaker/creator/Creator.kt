@@ -1,5 +1,6 @@
 package com.example.playlistmaker.creator
 
+import android.app.Activity
 import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,16 +23,28 @@ import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.GetTrackByIdUseCase
 import com.example.playlistmaker.domain.usecases.GetTrackCoverUseCase
+import com.example.playlistmaker.presentation.ui.search.activity.TrackAdapter
+import com.example.playlistmaker.presentation.ui.search.view_model.TracksSearchPresenter
+import com.example.playlistmaker.presentation.ui.search.view_model.TracksView
 
 object Creator {
 
 
-    private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+    fun provideTracksSearchPresenter(
+        context: Context
+    ): TracksSearchPresenter {
+        return TracksSearchPresenter(
+            context = context
+        )
     }
 
-    fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+
+    private fun getTracksRepository(context: Context): TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient(context))
+    }
+
+    fun provideTracksInteractor(context: Context): TracksInteractor {
+        return TracksInteractorImpl(getTracksRepository(context))
     }
 
 

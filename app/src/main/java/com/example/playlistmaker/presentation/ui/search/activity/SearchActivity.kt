@@ -6,48 +6,57 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.creator.Creator.provideSearchHistoryInteractor
-import com.example.playlistmaker.creator.Creator.provideTracksInteractor
+import com.example.playlistmaker.creator.Creator.provideTracksSearchPresenter
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.presentation.ui.player.activity.AudioPlayerActivity
+import com.example.playlistmaker.presentation.ui.search.models.TracksState
+import com.example.playlistmaker.presentation.ui.search.view_model.TracksSearchPresenter
+import com.example.playlistmaker.presentation.ui.search.view_model.TracksView
+import com.example.playlistmaker.util.TracksApplication
+import moxy.MvpActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
+class SearchActivity : MvpActivity(), TrackAdapter.TrackClickListener, TracksView {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val tracksInteractor by lazy { provideTracksInteractor() }
+    private var isClickAllowed = true
 
-    private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks, this)
+    private val adapter = TrackAdapter(this)
 
     private var searchText = ""
-    private var lastQuery = ""
-
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
+    private var textWatcher: TextWatcher? = null
 
     private lateinit var editText: EditText
     private lateinit var nothingFound: LinearLayout
-    private lateinit var notInternet: LinearLayout
+    private lateinit var noInternet: LinearLayout
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
 
     private val searchHistory by lazy { provideSearchHistoryInteractor(applicationContext) }
 
-    private val searchRunnable = Runnable {
-        if (editText.text.isNotEmpty()) {
-            findTracks(editText.text.toString())
-        }
+    private val handler = Handler(Looper.getMainLooper())
+
+    @InjectPresenter
+    lateinit var tracksSearchPresenter: TracksSearchPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): TracksSearchPresenter {
+        return provideTracksSearchPresenter(
+            context = this.applicationContext,
+        )
     }
 
     @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
@@ -57,11 +66,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         setContentView(binding.root)
 
         val searchHistoryTracks = searchHistory.getHistory()
-        adapterHistory = TrackAdapter(searchHistoryTracks, this)
+        adapterHistory = TrackAdapter(this)
+        adapterHistory.tracks = searchHistoryTracks
 
         editText = binding.editText
         nothingFound = binding.nothingFoundLayout
-        notInternet = binding.noInternetLayout
+        noInternet = binding.noInternetLayout
         progressBar = binding.progressBar
         rvTracks = binding.tracksRecyclerView
         val clearButton = binding.clearIcon
@@ -79,7 +89,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
         clearButton.setOnClickListener {
             editText.setText("")
-            tracks.clear()
+            //tracks.clear() 11111111111111111111111111111111111111
             adapter.notifyDataSetChanged()
         }
 
@@ -91,35 +101,49 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         }
 
         updateButton.setOnClickListener {
-            findTracks(lastQuery)
+            tracksSearchPresenter.searchDebounce(
+                changedText = editText.text.toString()
+            )
         }
 
         editText.setOnFocusChangeListener { view, hasFocus ->
-            llSearchHistory.visibility = if (hasFocus && editText.text.isEmpty() && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
+            llSearchHistory.visibility =
+                if (hasFocus && editText.text.isEmpty() && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
         }
 
-        editText.doOnTextChanged { s, start, before, count ->
-            searchText = editText.text.toString()
-            clearButton.visibility = clearButtonVisibility(s)
-            if (editText.text.isEmpty()) {
-                rvTracks.visibility = View.GONE
-                nothingFound.visibility = View.GONE
-                notInternet.visibility = View.GONE
+        textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-            llSearchHistory.visibility = if (editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
-            searchDebounce()
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchText = editText.text.toString()
+                clearButton.visibility = clearButtonVisibility(s)
+                if (editText.text.isEmpty()) {
+                    rvTracks.visibility = View.GONE
+                    nothingFound.visibility = View.GONE
+                    noInternet.visibility = View.GONE
+                }
+                llSearchHistory.visibility =
+                    if (editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
+                tracksSearchPresenter.searchDebounce(
+                    changedText = s?.toString() ?: ""
+                )
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
         }
+        textWatcher?.let { editText.addTextChangedListener(it) }
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (editText.text.isNotEmpty()) {
-                    findTracks(editText.text.toString())
-                }
+                tracksSearchPresenter.searchDebounce(
+                    changedText = editText.text.toString()
+                )
                 true
             }
             false
         }
-
     }
 
     override fun onStart() {
@@ -127,87 +151,60 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         editText.requestFocus()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun showMessage(error: Int) {
-        if (error == 1) {
-            notInternet.visibility = View.GONE
-            nothingFound.visibility = View.VISIBLE
-            tracks.clear()
-            adapter.notifyDataSetChanged()
+    override fun onDestroy() {
+        super.onDestroy()
+        textWatcher?.let { editText.removeTextChangedListener(it) }
 
-        } else if (error == 2){
-            nothingFound.visibility = View.GONE
-            notInternet.visibility = View.VISIBLE
-            tracks.clear()
-            adapter.notifyDataSetChanged()
-        } else {
-            nothingFound.visibility = View.GONE
-            notInternet.visibility = View.GONE
+//        if (isFinishing()) {
+//            // Очищаем ссылку на Presenter в Application
+//            (this.application as? TracksApplication)?.tracksSearchPresenter = null
+//        }
+    }
+
+    override fun render(state: TracksState) {
+        when (state) {
+            is TracksState.Loading -> showLoading()
+            is TracksState.Content -> showContent(state.tracks)
+            is TracksState.Error -> showError(state.errorCode)
+            is TracksState.Empty -> showEmpty(state.code)
         }
     }
 
-    private fun findTracks(query: String) {
-    nothingFound.visibility = View.GONE
-    notInternet.visibility = View.GONE
-    rvTracks.visibility = View.GONE
-    progressBar.visibility = View.VISIBLE
-    tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun consume(foundTracks: List<Track>) {
-            handler.post {
-                progressBar.visibility = View.GONE
-                tracks.clear()
-                tracks.addAll(foundTracks)
-                rvTracks.visibility = View.VISIBLE
-                adapter.notifyDataSetChanged()
-                if (tracks.isEmpty()) {
-                    showMessage(SearchActivity.NOTHING_FOUND)
-                } else {
-                    showMessage(0)
-                }
-            }
-        }
-    })
-}
+    private fun showLoading() {
+        rvTracks.visibility = View.GONE
+        messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
+        progressBar.visibility = View.VISIBLE
+    }
 
-//    private fun findTracks(query: String) {
-//        nothingFound.visibility = View.GONE
-//        notInternet.visibility = View.GONE
-//        rvTracks.visibility = View.GONE
-//        progressBar.visibility = View.VISIBLE
-//        iTunesSearchService.search(query).enqueue(object :
-//            Callback<TracksSearchResponse> {
-//            @SuppressLint("NotifyDataSetChanged")
-//            override fun onResponse(call: Call<TracksSearchResponse>,
-//                                    response: Response<TracksSearchResponse>
-//            ) {
-//                progressBar.visibility = View.GONE // Прячем ProgressBar после успешного выполнения запроса
-//                if (response.code() == 200) {
-//                    tracks.clear()
-//                    if (response.body()?.results?.isNotEmpty() == true) {
-//                        rvTracks.visibility = View.VISIBLE
-//                        tracks.addAll(response.body()?.results!!)
-//                        adapter.notifyDataSetChanged()
-//                    }
-//                    if (tracks.isEmpty()) {
-//                        showMessage(NOTHING_FOUND)
-//                    } else {
-//                        showMessage(0)
-//                    }
-//                } else {
-//                    lastQuery = query
-//                    showMessage(NO_INTERNET)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-//                progressBar.visibility = View.GONE // Прячем ProgressBar после выполнения запроса с ошибкой
-//                lastQuery = query
-//                showMessage(NO_INTERNET)
-//            }
-//
-//        })
-//    }
+    private fun showError(errorCode: Int) {
+        rvTracks.visibility = View.GONE
+        when (errorCode) {
+            0, 400 -> messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = true)
+            -1 -> messageVisibility(noInternetIsVisible = true, nothingFoundIsVisible = false)
+            else -> messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
+        }
+        progressBar.visibility = View.GONE
+    }
+
+    private fun showEmpty(emptyCode: Int) {
+        showError(emptyCode)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showContent(tracks: List<Track>) {
+        rvTracks.visibility = View.VISIBLE
+        messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
+        progressBar.visibility = View.GONE
+
+        adapter.tracks.clear()
+        adapter.tracks.addAll(tracks)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun messageVisibility(noInternetIsVisible: Boolean, nothingFoundIsVisible: Boolean) {
+        noInternet.visibility = if (noInternetIsVisible) View.VISIBLE else View.GONE
+        nothingFound.visibility = if (nothingFoundIsVisible) View.VISIBLE else View.GONE
+    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -217,18 +214,13 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
         }
     }
 
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
-    }
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     override fun onSaveInstanceState(saveInstanceState: Bundle) {
@@ -243,7 +235,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onClick(track: Track) {
+    override fun onTrackClick(track: Track) {
         if (clickDebounce()) {
             searchHistory.addTrack(track)
             adapterHistory.tracks = searchHistory.getHistory()
@@ -256,9 +248,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.Listener {
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val NOTHING_FOUND = 1
-        private const val NO_INTERNET = 2
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
