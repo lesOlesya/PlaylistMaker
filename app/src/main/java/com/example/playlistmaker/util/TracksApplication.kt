@@ -2,13 +2,13 @@ package com.example.playlistmaker.util
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.presentation.ui.search.view_model.TracksSearchPresenter
-import com.example.playlistmaker.presentation.ui.settings.activity.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.presentation.ui.settings.activity.THEME_SWITCHER_KEY
+import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
+import com.example.playlistmaker.settings.ui.PLAYLIST_MAKER_PREFERENCES
+import com.example.playlistmaker.settings.ui.THEME_SWITCHER_KEY
 
 class TracksApplication : Application() {
 
-    var tracksSearchPresenter : TracksSearchPresenter? = null
+    var tracksSearchViewModel : TracksSearchViewModel? = null
 
     private var darkTheme = false
 

@@ -1,43 +1,28 @@
 package com.example.playlistmaker.creator
 
-import android.app.Activity
 import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.data.repositories.PlayerRepositoryImpl
-import com.example.playlistmaker.data.repositories.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.repositories.TrackCoverRepositoryImpl
-import com.example.playlistmaker.data.repositories.TracksRepositoryImpl
-import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.domain.api.SearchHistoryInteractor
-import com.example.playlistmaker.domain.api.SearchHistoryRepository
-import com.example.playlistmaker.domain.api.TrackCoverRepository
-import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.api.TracksRepository
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.usecases.GetTrackByIdUseCase
-import com.example.playlistmaker.domain.usecases.GetTrackCoverUseCase
-import com.example.playlistmaker.presentation.ui.search.activity.TrackAdapter
-import com.example.playlistmaker.presentation.ui.search.view_model.TracksSearchPresenter
-import com.example.playlistmaker.presentation.ui.search.view_model.TracksView
+import com.example.playlistmaker.player.data.PlayerRepositoryImpl
+import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.player.data.TrackCoverRepositoryImpl
+import com.example.playlistmaker.search.data.repositories.TracksRepositoryImpl
+import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.player.domain.PlayerRepository
+import com.example.playlistmaker.search.domain.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.SearchHistoryRepository
+import com.example.playlistmaker.player.domain.TrackCoverRepository
+import com.example.playlistmaker.search.domain.TracksInteractor
+import com.example.playlistmaker.search.domain.TracksRepository
+import com.example.playlistmaker.player.domain.PlayerInteractorImpl
+import com.example.playlistmaker.search.domain.SearchHistoryInteractorImpl
+import com.example.playlistmaker.search.domain.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.player.domain.GetTrackByIdUseCase
+import com.example.playlistmaker.player.domain.GetTrackCoverUseCase
 
 object Creator {
-
-
-    fun provideTracksSearchPresenter(
-        context: Context
-    ): TracksSearchPresenter {
-        return TracksSearchPresenter(
-            context = context
-        )
-    }
-
 
     private fun getTracksRepository(context: Context): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(context))
