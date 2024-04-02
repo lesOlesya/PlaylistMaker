@@ -1,26 +1,20 @@
 package com.example.playlistmaker.creator
 
 import android.content.Context
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.ToggleButton
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.player.data.TrackCoverRepositoryImpl
 import com.example.playlistmaker.search.data.repositories.TracksRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.SearchHistoryRepository
-import com.example.playlistmaker.player.domain.TrackCoverRepository
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.TracksRepository
 import com.example.playlistmaker.player.domain.PlayerInteractorImpl
 import com.example.playlistmaker.search.domain.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.TracksInteractorImpl
-import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.domain.GetTrackByIdUseCase
-import com.example.playlistmaker.player.domain.GetTrackCoverUseCase
+import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 
 object Creator {
 
@@ -44,20 +38,18 @@ object Creator {
 
     private fun getPlayerRepository(
         context: Context,
-        play: ToggleButton,
-        tvTrackTime: TextView,
-        url: String?
+        url: String?,
+        statusObserver: PlayerRepositoryImpl.StatusObserver
     ): PlayerRepository {
-        return PlayerRepositoryImpl(context, play, tvTrackTime, url)
+        return PlayerRepositoryImpl(context, url, statusObserver)
     }
 
     fun providePlayerInteractor(
         context: Context,
-        play: ToggleButton,
-        tvTrackTime: TextView,
-        url: String?
+        url: String?,
+        statusObserver: PlayerRepositoryImpl.StatusObserver
     ): PlayerInteractor {
-        return PlayerInteractorImpl(getPlayerRepository(context, play, tvTrackTime, url))
+        return PlayerInteractorImpl(getPlayerRepository(context, url, statusObserver))
     }
 
 
@@ -69,20 +61,4 @@ object Creator {
         return GetTrackByIdUseCase(getTrackByIdRepository(context))
     }
 
-
-    private fun getTrackCoverRepository(
-        context: Context,
-        track: Track,
-        placeForCover: ImageView
-    ): TrackCoverRepository {
-        return TrackCoverRepositoryImpl(context, track, placeForCover)
-    }
-
-    fun provideTrackCoverUseCase(
-        context: Context,
-        track: Track,
-        placeForCover: ImageView
-    ): GetTrackCoverUseCase {
-        return GetTrackCoverUseCase(getTrackCoverRepository(context, track, placeForCover))
-    }
 }

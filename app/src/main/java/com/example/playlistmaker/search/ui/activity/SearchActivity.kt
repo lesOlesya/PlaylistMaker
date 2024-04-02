@@ -15,24 +15,22 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.creator.Creator.provideSearchHistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.AudioPlayerActivity
-import com.example.playlistmaker.search.ui.models.TracksState
+import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
+import com.example.playlistmaker.search.domain.models.TracksState
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private lateinit var tracksSearchViewModel: TracksSearchViewModel
+    private lateinit var viewModel: TracksSearchViewModel
 
     private var isClickAllowed = true
 
     private val adapter = TrackAdapter(this)
 
-    private var searchText = ""
     private var textWatcher: TextWatcher? = null
 
     private lateinit var editText: EditText
@@ -42,8 +40,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
 
-    private val searchHistory by lazy { provideSearchHistoryInteractor(applicationContext) }
-
     private val handler = Handler(Looper.getMainLooper())
 
     @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
@@ -52,11 +48,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        tracksSearchViewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
+        viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
 
-        val searchHistoryTracks = searchHistory.getHistory()
         adapterHistory = TrackAdapter(this)
-        adapterHistory.tracks = searchHistoryTracks
+        adapterHistory.tracks = viewModel.getSearchHistoryLiveData().value!!
 
         editText = binding.editText
         nothingFound = binding.nothingFoundLayout
@@ -78,19 +73,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
         clearButton.setOnClickListener {
             editText.setText("")
-            //tracks.clear() 11111111111111111111111111111111111111
             adapter.notifyDataSetChanged()
         }
 
         clearHistoryButton.setOnClickListener {
-            searchHistory.clearHistory()
-            adapterHistory.tracks.clear()
-            adapterHistory.notifyDataSetChanged()
+            viewModel.clearSearchHistory()
             llSearchHistory.visibility = View.GONE
         }
 
         updateButton.setOnClickListener {
-            tracksSearchViewModel.searchDebounce(
+            viewModel.searchDebounce(
                 changedText = editText.text.toString()
             )
         }
@@ -105,7 +97,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchText = editText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
                 if (editText.text.isEmpty()) {
                     rvTracks.visibility = View.GONE
@@ -114,7 +105,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
                 }
                 llSearchHistory.visibility =
                     if (editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
-                tracksSearchViewModel.searchDebounce(
+                viewModel.searchDebounce(
                     changedText = s?.toString() ?: ""
                 )
             }
@@ -126,7 +117,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                tracksSearchViewModel.searchDebounce(
+                viewModel.searchDebounce(
                     changedText = editText.text.toString()
                 )
                 true
@@ -134,8 +125,13 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             false
         }
 
-        tracksSearchViewModel.observeState().observe(this) {
+        viewModel.observeState().observe(this) {
             render(it)
+        }
+
+        viewModel.getSearchHistoryLiveData().observe(this) { searchHistory ->
+            adapterHistory.tracks = searchHistory
+            adapterHistory.notifyDataSetChanged()
         }
     }
 
@@ -211,23 +207,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         return current
     }
 
-    override fun onSaveInstanceState(saveInstanceState: Bundle) {
-        saveInstanceState.putString(SEARCH_TEXT, searchText)
-        super.onSaveInstanceState(saveInstanceState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_TEXT, "")
-        editText.setText(searchText)
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onTrackClick(track: Track) {
         if (clickDebounce()) {
-            searchHistory.addTrack(track)
-            adapterHistory.tracks = searchHistory.getHistory()
-            adapterHistory.notifyDataSetChanged()
+            viewModel.addTrackToSearchHistory(track)
             val intent = Intent(this, AudioPlayerActivity::class.java)
             intent.putExtra("TrackId", track.trackId)
             startActivity(intent)
@@ -235,7 +218,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     }
 
     companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

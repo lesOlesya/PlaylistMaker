@@ -14,11 +14,13 @@ import com.example.playlistmaker.search.domain.models.Track
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.search.ui.models.TracksState
+import com.example.playlistmaker.search.domain.models.TracksState
 
 class TracksSearchViewModel(application: Application): AndroidViewModel(application)  {
 
     private val tracksInteractor by lazy { Creator.provideTracksInteractor(getApplication<Application>()) }
+    private val searchHistory by lazy { Creator.provideSearchHistoryInteractor(getApplication<Application>()) }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private val tracks = ArrayList<Track>()
@@ -33,7 +35,20 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
     private var latestSearchText: String? = null
 
     private val stateLiveData = MutableLiveData<TracksState>()
+    private val searchHistoryLiveData = MutableLiveData(searchHistory.getHistory())
+
     fun observeState(): LiveData<TracksState> = stateLiveData
+    fun getSearchHistoryLiveData(): LiveData<ArrayList<Track>> = searchHistoryLiveData
+
+    fun clearSearchHistory() {
+        searchHistory.clearHistory()
+        searchHistoryLiveData.postValue(searchHistory.getHistory())
+    }
+
+    fun addTrackToSearchHistory(track: Track) {
+        searchHistory.addTrack(track)
+        searchHistoryLiveData.postValue(searchHistory.getHistory())
+    }
 
     private fun findTracks(query: String) {
         renderState(TracksState.Loading)
@@ -63,7 +78,6 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
     }
 
     fun searchDebounce(changedText: String) {
-
         if (latestSearchText == changedText) {
             return
         }

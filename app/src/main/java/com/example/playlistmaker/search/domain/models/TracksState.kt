@@ -1,6 +1,4 @@
-package com.example.playlistmaker.search.ui.models
-
-import com.example.playlistmaker.search.domain.models.Track
+package com.example.playlistmaker.search.domain.models
 
 interface TracksState {
 
