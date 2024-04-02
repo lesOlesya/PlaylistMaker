@@ -16,10 +16,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.search.domain.models.TracksState
 
-class TracksSearchViewModel(application: Application): AndroidViewModel(application)  {
+class TracksSearchViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tracksInteractor by lazy { Creator.provideTracksInteractor(getApplication<Application>()) }
-    private val searchHistory by lazy { Creator.provideSearchHistoryInteractor(getApplication<Application>()) }
+    private val tracksInteractor by lazy { Creator.provideTracksInteractor(getApplication()) }
+    private val searchHistory by lazy { Creator.provideSearchHistoryInteractor(getApplication()) }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -37,7 +37,7 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
     private val stateLiveData = MutableLiveData<TracksState>()
     private val searchHistoryLiveData = MutableLiveData(searchHistory.getHistory())
 
-    fun observeState(): LiveData<TracksState> = stateLiveData
+    fun getStateLiveData(): LiveData<TracksState> = stateLiveData
     fun getSearchHistoryLiveData(): LiveData<ArrayList<Track>> = searchHistoryLiveData
 
     fun clearSearchHistory() {
@@ -102,7 +102,9 @@ class TracksSearchViewModel(application: Application): AndroidViewModel(applicat
 
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                TracksSearchViewModel(this[APPLICATION_KEY] as Application)
+                val context = this[APPLICATION_KEY] as Application
+
+                TracksSearchViewModel(context)
             }
         }
     }

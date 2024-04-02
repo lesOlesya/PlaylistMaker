@@ -48,7 +48,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            TracksSearchViewModel.getViewModelFactory()
+        )[TracksSearchViewModel::class.java]
 
         adapterHistory = TrackAdapter(this)
         adapterHistory.tracks = viewModel.getSearchHistoryLiveData().value!!
@@ -125,7 +128,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             false
         }
 
-        viewModel.observeState().observe(this) {
+        viewModel.getStateLiveData().observe(this) {
             render(it)
         }
 

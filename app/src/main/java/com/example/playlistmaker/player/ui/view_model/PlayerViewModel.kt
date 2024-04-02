@@ -12,16 +12,16 @@ import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.models.PlayStatus
 import com.example.playlistmaker.search.domain.models.Track
 
-class PlayerViewModel(application: Application, private val trackId: Int) :
+class PlayerViewModel(application: Application, trackId: Int) :
     AndroidViewModel(application) {
 
-    private val getTrackByIdUseCase by lazy { Creator.provideTrackByIdUseCase(getApplication<Application>()) }
+    private val getTrackByIdUseCase by lazy { Creator.provideTrackByIdUseCase(getApplication()) }
 
     private val track = getTrackByIdUseCase.execute(trackId)
     private val url = track!!.previewUrl
 
     private val trackPlayer = Creator.providePlayerInteractor(
-        getApplication<Application>(),
+        getApplication(),
         url,
         statusObserver = object : PlayerRepositoryImpl.StatusObserver {
             override fun onProgress(progress: String) {
