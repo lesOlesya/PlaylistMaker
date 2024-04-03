@@ -84,6 +84,10 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
         this.latestSearchText = changedText
 
         this.lastSearchText = changedText
+        updateDebounce()
+    }
+
+    fun updateDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }

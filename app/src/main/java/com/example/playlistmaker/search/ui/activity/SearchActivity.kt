@@ -85,9 +85,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         }
 
         updateButton.setOnClickListener {
-            viewModel.searchDebounce(
-                changedText = editText.text.toString()
-            )
+            viewModel.updateDebounce()
         }
 
         editText.setOnFocusChangeListener { view, hasFocus ->
