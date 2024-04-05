@@ -62,10 +62,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         progressBar = binding.progressBar
         rvTracks = binding.tracksRecyclerView
         val clearButton = binding.clearIcon
-        val updateButton = binding.buttonUpdate
         val llSearchHistory = binding.searchHistoryLayout
         val rvSearchHistory = binding.searchHistoryRecyclerView
-        val clearHistoryButton = binding.buttonClearHistory
 
         rvTracks.adapter = adapter
         rvSearchHistory.adapter = adapterHistory
@@ -74,18 +72,18 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             finish()
         }
 
-        clearButton.setOnClickListener {
-            editText.setText("")
-            adapter.notifyDataSetChanged()
-        }
-
-        clearHistoryButton.setOnClickListener {
+        binding.buttonClearHistory.setOnClickListener {
             viewModel.clearSearchHistory()
             llSearchHistory.visibility = View.GONE
         }
 
-        updateButton.setOnClickListener {
+        binding.buttonUpdate.setOnClickListener {
             viewModel.updateDebounce()
+        }
+
+        clearButton.setOnClickListener {
+            editText.setText("")
+            adapter.notifyDataSetChanged()
         }
 
         editText.setOnFocusChangeListener { view, hasFocus ->
