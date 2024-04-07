@@ -4,13 +4,19 @@ interface PlayerRepository {
 
     fun createUpdateTimerTask()
 
-    fun preparePlayer()
+    fun preparePlayer(url: String)
 
     fun startPlayer()
 
     fun pausePlayer()
 
-    fun playbackControl()
+    fun playbackControl(statusObserver: StatusObserver)
 
     fun releasePlayer()
+
+    interface StatusObserver {
+        fun onProgress(progress: String)
+        fun onStop()
+        fun onPlay()
+    }
 }

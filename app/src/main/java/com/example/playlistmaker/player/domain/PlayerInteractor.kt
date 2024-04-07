@@ -4,13 +4,13 @@ interface PlayerInteractor {
 
     fun createUpdateTimerTask()
 
-    fun preparePlayer()
+    fun preparePlayer(url: String)
 
     fun startPlayer()
 
     fun pausePlayer()
 
-    fun playbackControl()
+    fun playbackControl(statusObserver: PlayerRepository.StatusObserver)
 
     fun releasePlayer()
 }
