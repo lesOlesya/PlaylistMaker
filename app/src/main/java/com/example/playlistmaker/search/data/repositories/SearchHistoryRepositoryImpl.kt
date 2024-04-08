@@ -1,20 +1,18 @@
 package com.example.playlistmaker.search.data.repositories
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.search.domain.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.settings.data.PLAYLIST_MAKER_PREFERENCES
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 const val SEARCH_HISTORY_KEY = "key_for_search_history"
 
-class SearchHistoryRepositoryImpl(context: Context) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : SearchHistoryRepository {
 
-    private val sharedPreferences = context.getSharedPreferences(
-        PLAYLIST_MAKER_PREFERENCES,
-        Context.MODE_PRIVATE
-    )
     private val tracks = getHistory()
 
     override fun addTrack(track: Track) {
@@ -26,21 +24,22 @@ class SearchHistoryRepositoryImpl(context: Context) : SearchHistoryRepository {
         }
         if (tracks.size == 10) tracks.removeLast()
         tracks.add(0, track)
-        val json = Gson().toJson(tracks)
+        val json = gson.toJson(tracks)
         sharedPreferences.edit()
             .putString(SEARCH_HISTORY_KEY, json)
             .apply()
     }
 
     override fun getHistory(): ArrayList<Track> {
-        val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return ArrayList<Track>()
+        val json =
+            sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return ArrayList<Track>()
         val type = object : TypeToken<ArrayList<Track>>() {}.type
-        return Gson().fromJson(json, type)
+        return gson.fromJson(json, type)
     }
 
     override fun clearHistory() {
         tracks.clear()
-        val json = Gson().toJson(tracks)
+        val json = gson.toJson(tracks)
         sharedPreferences.edit()
             .putString(SEARCH_HISTORY_KEY, json)
             .apply()

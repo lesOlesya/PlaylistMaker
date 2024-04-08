@@ -6,8 +6,8 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         repository.createUpdateTimerTask()
     }
 
-    override fun preparePlayer() {
-        repository.preparePlayer()
+    override fun preparePlayer(url: String) {
+        repository.preparePlayer(url)
     }
 
     override fun startPlayer() {
@@ -18,8 +18,8 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         repository.pausePlayer()
     }
 
-    override fun playbackControl() {
-        repository.playbackControl()
+    override fun playbackControl(statusObserver: PlayerRepository.StatusObserver) {
+        repository.playbackControl(statusObserver)
     }
 
     override fun releasePlayer() {

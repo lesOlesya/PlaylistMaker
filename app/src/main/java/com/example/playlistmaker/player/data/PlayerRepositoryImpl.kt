@@ -8,32 +8,30 @@ import android.widget.Toast
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerStates
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerRepositoryImpl(
-    private val context: Context,
-    private val url: String?,
-    private val statusObserver: StatusObserver
+    private val mediaPlayer: MediaPlayer,
+    private val simpleDateFormat: SimpleDateFormat,
+    private val context: Context
 ) : PlayerRepository {
 
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = PlayerStates.STATE_DEFAULT
     private val timerRunnable = Runnable { createUpdateTimerTask() }
     private val mainThreadHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var statusObserver: PlayerRepository.StatusObserver
+
+    private var playerState = PlayerStates.STATE_DEFAULT
 
     override fun createUpdateTimerTask() {
         if (playerState == PlayerStates.STATE_PLAYING) {
             statusObserver.onProgress(
-                SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
+                simpleDateFormat.format(mediaPlayer.currentPosition)
             )
             mainThreadHandler.postDelayed(timerRunnable, DELAY)
         } else mainThreadHandler.removeCallbacks(timerRunnable)
     }
 
-    override fun preparePlayer() {
+    override fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -61,7 +59,8 @@ class PlayerRepositoryImpl(
         mainThreadHandler.removeCallbacks(timerRunnable)
     }
 
-    override fun playbackControl() {
+    override fun playbackControl(statusObserver: PlayerRepository.StatusObserver) {
+        this.statusObserver = statusObserver
         when (playerState) {
             PlayerStates.STATE_DEFAULT -> {
                 statusObserver.onPlay()
@@ -86,12 +85,6 @@ class PlayerRepositoryImpl(
     override fun releasePlayer() {
         mediaPlayer.release()
         mainThreadHandler.removeCallbacks(timerRunnable)
-    }
-
-    interface StatusObserver {
-        fun onProgress(progress: String)
-        fun onStop()
-        fun onPlay()
     }
 
     companion object {

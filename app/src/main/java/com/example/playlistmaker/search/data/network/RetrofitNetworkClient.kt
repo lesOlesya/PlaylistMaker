@@ -6,17 +6,11 @@ import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient(private val context: Context) : NetworkClient {
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(I_TUNES_SEARCH_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesSearchService = retrofit.create(ITunesSearchApi::class.java)
+class RetrofitNetworkClient(
+    private val iTunesSearchService: ITunesSearchApi,
+    private val context: Context
+) : NetworkClient {
 
     override fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
@@ -37,8 +31,10 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (capabilities != null) {
             when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
@@ -47,9 +43,5 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             }
         }
         return false
-    }
-
-    companion object {
-        const val I_TUNES_SEARCH_BASE_URL = "https://itunes.apple.com"
     }
 }

@@ -13,7 +13,12 @@ class ExternalNavigatorImpl(private val context: Context): ExternalNavigator {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, appLink)
-        startActivity(context, Intent.createChooser(intent, null), null)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        val chooserIntent = Intent.createChooser(intent, null)
+        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        startActivity(context, chooserIntent, null)
     }
 
     override fun openEmail(supportEmailData: EmailData) {
@@ -22,13 +27,15 @@ class ExternalNavigatorImpl(private val context: Context): ExternalNavigator {
             putExtra(Intent.EXTRA_EMAIL, supportEmailData.email)
             putExtra(Intent.EXTRA_SUBJECT, supportEmailData.subject)
             putExtra(Intent.EXTRA_TEXT, supportEmailData.text)
-            startActivity(context,this, null)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, this, null)
         }
     }
 
     override fun openLink(termsLink: String) {
         val url = Uri.parse(termsLink)
         val intent = Intent(Intent.ACTION_VIEW, url)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(context, intent, null)
     }
 

@@ -4,20 +4,22 @@ import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+
+    private val simpleDateFormat: SimpleDateFormat by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +28,9 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         val trackId = intent.getIntExtra("TrackId", 0)
 
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getViewModelFactory(trackId)
-        )[PlayerViewModel::class.java]
+        val viewModel: PlayerViewModel by viewModel {
+            parametersOf(trackId)
+        }
 
         binding.audioPlayerBack.setOnClickListener {
             finish()
@@ -39,7 +40,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding.trackNameTvAudioPlayer.text = track.trackName
             binding.artistNameTvAudioPlayer.text = track.artistName
             binding.durationTvAudioPlayer.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)!!
+                simpleDateFormat.format(track.trackTimeMillis)!!
             binding.albumTvAudioPlayer.text = track.collectionName.orEmpty()
             binding.yearTvAudioPlayer.text = track.releaseDate?.substring(0, 4).orEmpty()
             binding.genreTvAudioPlayer.text = track.primaryGenreName.orEmpty()

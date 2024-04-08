@@ -13,19 +13,19 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
 import com.example.playlistmaker.search.domain.models.TracksState
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private lateinit var viewModel: TracksSearchViewModel
+    private val viewModel by viewModel<TracksSearchViewModel>()
 
     private var isClickAllowed = true
 
@@ -39,8 +39,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
-
-    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var handler: Handler
 
     @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +47,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            TracksSearchViewModel.getViewModelFactory()
-        )[TracksSearchViewModel::class.java]
+        handler = Handler(Looper.getMainLooper())
 
         adapterHistory = TrackAdapter(this)
         adapterHistory.tracks = viewModel.getSearchHistoryLiveData().value!!
@@ -62,10 +58,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         progressBar = binding.progressBar
         rvTracks = binding.tracksRecyclerView
         val clearButton = binding.clearIcon
-        val updateButton = binding.buttonUpdate
         val llSearchHistory = binding.searchHistoryLayout
         val rvSearchHistory = binding.searchHistoryRecyclerView
-        val clearHistoryButton = binding.buttonClearHistory
 
         rvTracks.adapter = adapter
         rvSearchHistory.adapter = adapterHistory
@@ -74,18 +68,18 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             finish()
         }
 
-        clearButton.setOnClickListener {
-            editText.setText("")
-            adapter.notifyDataSetChanged()
-        }
-
-        clearHistoryButton.setOnClickListener {
+        binding.buttonClearHistory.setOnClickListener {
             viewModel.clearSearchHistory()
             llSearchHistory.visibility = View.GONE
         }
 
-        updateButton.setOnClickListener {
+        binding.buttonUpdate.setOnClickListener {
             viewModel.updateDebounce()
+        }
+
+        clearButton.setOnClickListener {
+            editText.setText("")
+            adapter.notifyDataSetChanged()
         }
 
         editText.setOnFocusChangeListener { view, hasFocus ->
