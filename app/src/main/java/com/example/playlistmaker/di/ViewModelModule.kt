@@ -14,7 +14,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        TracksSearchViewModel(get(), get(), get())
+        TracksSearchViewModel(get(), get())
     }
 
     viewModel {

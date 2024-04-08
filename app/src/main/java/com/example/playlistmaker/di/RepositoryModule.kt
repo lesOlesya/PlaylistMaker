@@ -38,7 +38,7 @@ val repositoryModule = module {
     }
 
     factory<PlayerRepository> {
-        PlayerRepositoryImpl(get(), get(), get(), get(), androidContext())
+        PlayerRepositoryImpl(get(), get(), androidContext())
     }
 
 }

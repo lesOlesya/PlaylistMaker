@@ -8,14 +8,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.core.component.KoinComponent
 import java.text.SimpleDateFormat
-import java.util.Locale
 
-class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewHolder(binding.root) {
+class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewHolder(binding.root), KoinComponent {
 
     private val ivArtwork = binding.ivArtworkSmall
 
     fun bind(track: Track, listener: TrackAdapter.TrackClickListener) {
+
+        val simpleDateFormat: SimpleDateFormat = getKoin().get()
 
         Glide.with(itemView)
             .load(track.artworkUrl100)
@@ -26,7 +28,7 @@ class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewH
 
         binding.tvTrackName.text = track.trackName
         binding.tvArtistName.text = track.artistName
-        binding.tvTrackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)!!
+        binding.tvTrackTime.text = simpleDateFormat.format(track.trackTimeMillis)!!
 
         itemView.setOnClickListener {
             listener.onTrackClick(track)

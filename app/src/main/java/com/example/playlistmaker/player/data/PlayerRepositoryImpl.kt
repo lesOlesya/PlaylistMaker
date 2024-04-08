@@ -3,6 +3,7 @@ package com.example.playlistmaker.player.data
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerStates
@@ -10,14 +11,16 @@ import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private var playerState: PlayerStates,
-    private val mainThreadHandler: Handler,
     private val simpleDateFormat: SimpleDateFormat,
     private val context: Context
 ) : PlayerRepository {
 
-    private lateinit var statusObserver: PlayerRepository.StatusObserver
     private val timerRunnable = Runnable { createUpdateTimerTask() }
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var statusObserver: PlayerRepository.StatusObserver
+
+    private var playerState = PlayerStates.STATE_DEFAULT
 
     override fun createUpdateTimerTask() {
         if (playerState == PlayerStates.STATE_PLAYING) {

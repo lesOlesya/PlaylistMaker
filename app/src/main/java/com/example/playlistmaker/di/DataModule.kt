@@ -2,9 +2,6 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import com.example.playlistmaker.player.domain.models.PlayerStates
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.network.ITunesSearchApi
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -39,10 +36,6 @@ val dataModule = module {
 
     factory { MediaPlayer() }
 
-    single { PlayerStates.STATE_DEFAULT }
-
-    single { Handler(Looper.getMainLooper()) }
-
-    single { SimpleDateFormat("mm:ss", Locale.getDefault()) }
+    factory { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
 }

@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.ui.view_model
 
 import android.annotation.SuppressLint
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,20 +13,19 @@ import com.example.playlistmaker.search.domain.models.TracksState
 
 class TracksSearchViewModel(
     private val tracksInteractor: TracksInteractor,
-    private val searchHistory: SearchHistoryInteractor,
-    private val handler : Handler
+    private val searchHistory: SearchHistoryInteractor
 ) : ViewModel() {
 
     private val tracks = ArrayList<Track>()
 
     private var lastSearchText: String? = null
+    private var latestSearchText: String? = null
 
     private val searchRunnable = Runnable {
         val newSearchText = lastSearchText ?: ""
         if (newSearchText.isNotEmpty()) findTracks(newSearchText)
     }
-
-    private var latestSearchText: String? = null
+    private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<TracksState>()
     private val searchHistoryLiveData = MutableLiveData(searchHistory.getHistory())

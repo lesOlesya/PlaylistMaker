@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,7 +19,6 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
 import com.example.playlistmaker.search.domain.models.TracksState
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
@@ -39,14 +39,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
-
-    private val handler: Handler by inject()
+    private lateinit var handler: Handler
 
     @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        handler = Handler(Looper.getMainLooper())
 
         adapterHistory = TrackAdapter(this)
         adapterHistory.tracks = viewModel.getSearchHistoryLiveData().value!!
