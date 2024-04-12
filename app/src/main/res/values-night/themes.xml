@@ -13,5 +13,7 @@
         <item name="textColorSearchUrl">@color/white</item>
         <item name="colorAccent">@color/blue</item>
 
+        <item name="tabRippleColor">#2CFFFFFF</item>
+
     </style>
 </resources>

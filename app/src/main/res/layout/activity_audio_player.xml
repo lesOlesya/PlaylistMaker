@@ -20,22 +20,15 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.93" />
 
-    <ImageButton
+    <ImageButton style="@style/ArrowInHeader"
         android:id="@+id/audio_player_back"
-        android:layout_width="@dimen/dp_48"
-        android:layout_height="@dimen/dp_48"
-        android:layout_marginStart="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_8"
-        android:background="@null"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/artwork_iv_audio_player"
-        android:foreground="?attr/selectableItemBackground"
-        app:srcCompat="@drawable/arrow" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/artwork_iv_audio_player"/>
 
     <ImageView
         android:id="@+id/artwork_iv_audio_player"
-        android:layout_marginTop="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_24"
         android:layout_height="0dp"
         android:layout_width="0dp"
         android:scaleType="centerCrop"
