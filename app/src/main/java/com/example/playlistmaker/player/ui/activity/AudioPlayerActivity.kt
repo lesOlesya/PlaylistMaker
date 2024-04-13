@@ -32,7 +32,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             parametersOf(trackId)
         }
 
-        binding.audioPlayerBack.setOnClickListener {
+        binding.audioPlayerToolbar.setNavigationOnClickListener {
             finish()
         }
 

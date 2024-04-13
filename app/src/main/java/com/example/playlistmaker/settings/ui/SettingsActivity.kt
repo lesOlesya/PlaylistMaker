@@ -16,7 +16,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.settingsBack.setOnClickListener {
+        binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 

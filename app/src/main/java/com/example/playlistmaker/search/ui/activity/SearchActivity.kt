@@ -64,7 +64,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
         rvTracks.adapter = adapter
         rvSearchHistory.adapter = adapterHistory
 
-        binding.searchBack.setOnClickListener {
+        binding.searchToolbar.setNavigationOnClickListener {
             finish()
         }
 

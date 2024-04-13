@@ -6,19 +6,14 @@
     android:orientation="vertical"
     android:background="?attr/colorPrimary">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton style="@style/ArrowInHeader"
-            android:id="@+id/settings_back"
-            tools:ignore="ContentDescription"/>
+    <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
+        android:id="@+id/settings_toolbar">
 
         <TextView style="@style/HeaderTextStyle"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_8"
             android:text="@string/settings"/>
-    </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/themeSwitcher"

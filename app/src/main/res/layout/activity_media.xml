@@ -5,21 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/colorPrimary"
     tools:context=".media.ui.activity.MediaActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton style="@style/ArrowInHeader"
-            android:id="@+id/media_back"
-            tools:ignore="ContentDescription"/>
+    <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
+        android:id="@+id/media_toolbar">
 
         <TextView style="@style/HeaderTextStyle"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_8"
             android:text="@string/media"/>
-    </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

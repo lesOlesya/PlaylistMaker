@@ -8,20 +8,14 @@
     android:background="?attr/colorPrimary"
     tools:context=".search.ui.activity.SearchActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton style="@style/ArrowInHeader"
-            android:id="@+id/search_back"
-            tools:ignore="ContentDescription"/>
+    <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
+        android:id="@+id/search_toolbar">
 
         <TextView style="@style/HeaderTextStyle"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_8"
             android:text="@string/search"/>
-    </LinearLayout>
 
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
