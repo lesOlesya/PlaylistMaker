@@ -2,7 +2,8 @@
 <resources>
     <dimen name="font_22">22sp</dimen>
     <dimen name="font_16">16sp</dimen>
-    <dimen name="dp_108">108dp</dimen>
+    <dimen name="dp_104">104dp</dimen>
+    <dimen name="dp_56">56dp</dimen>
     <dimen name="dp_48">48dp</dimen>
     <dimen name="dp_44">44dp</dimen>
     <dimen name="dp_36">36dp</dimen>
@@ -12,6 +13,7 @@
     <dimen name="dp_14">14dp</dimen>
     <dimen name="dp_12">12dp</dimen>
     <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
     <dimen name="zero">0dp</dimen>
     <dimen name="list_indent">60dp</dimen>
 </resources>
