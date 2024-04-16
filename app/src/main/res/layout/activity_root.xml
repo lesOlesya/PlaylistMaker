@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".root.ui.RootActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/rootFragmentContainerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/root_navigation_graph"
+        app:defaultNavHost="true"
+
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        app:menu="@menu/bottom_navigation_menu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_56"
+        android:background="?attr/colorPrimary"
+        app:itemActiveIndicatorStyle="@null"
+
+        app:itemPaddingBottom="@dimen/dp_10"
+        app:itemPaddingTop="@dimen/dp_8"
+
+        app:itemIconTint="@color/color_item_bottom_menu"
+        app:itemTextColor="@color/color_item_bottom_menu"
+        app:itemTextAppearanceActive="@style/ItemStyleBottomNavigationMenu"
+        app:itemTextAppearanceInactive="@style/ItemStyleBottomNavigationMenu"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:backgroundTint="@color/light_gray"/>
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

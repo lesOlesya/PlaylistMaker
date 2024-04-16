@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    tools:context=".search.ui.activity.SearchActivity">
+    tools:context=".search.ui.fragment.SearchFragment">
 
     <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
         android:id="@+id/search_toolbar">
@@ -96,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_16"
                 android:text="@string/clear_history"/>
         </LinearLayout>
 

@@ -1,9 +1,9 @@
-package com.example.playlistmaker.main.ui
+package com.example.playlistmaker.root.ui
 
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 
-class MainViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
+class RootViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
 
     fun setAppTheme() = settingsInteractor.updateThemeSetting(settingsInteractor.getThemeSettings())
 }

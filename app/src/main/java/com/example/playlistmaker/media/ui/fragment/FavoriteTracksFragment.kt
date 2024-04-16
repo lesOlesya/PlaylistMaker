@@ -12,16 +12,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
-    companion object {
-//        private const val POSTER_URL = "poster_url"
-
-        fun newInstance() = FavoriteTracksFragment().apply {
-            arguments = Bundle().apply {
-//                putString(POSTER_URL, posterUrl)
-            }
-        }
-    }
-
     private val viewModel by viewModel<FavoriteTracksViewModel>()
 
     private lateinit var binding: FragmentFavoriteTracksBinding
@@ -42,5 +32,15 @@ class FavoriteTracksFragment : Fragment() {
 
     private fun showTracks(tracks: ArrayList<Track>) {
         if (tracks.isEmpty()) binding.mediaIsEmptyLayout.visibility = View.VISIBLE
+    }
+
+    companion object {
+//        private const val POSTER_URL = "poster_url"
+
+        fun newInstance() = FavoriteTracksFragment().apply {
+            arguments = Bundle().apply {
+//                putString(POSTER_URL, posterUrl)
+            }
+        }
     }
 }
