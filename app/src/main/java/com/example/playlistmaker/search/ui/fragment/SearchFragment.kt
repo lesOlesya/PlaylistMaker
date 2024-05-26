@@ -1,29 +1,33 @@
-package com.example.playlistmaker.search.ui.activity
+package com.example.playlistmaker.search.ui.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
+import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
+class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
 
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchBinding
 
     private val viewModel by viewModel<TracksSearchViewModel>()
 
@@ -41,11 +45,18 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     private lateinit var rvTracks: RecyclerView
     private lateinit var handler: Handler
 
-    @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         handler = Handler(Looper.getMainLooper())
 
@@ -63,10 +74,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
         rvTracks.adapter = adapter
         rvSearchHistory.adapter = adapterHistory
-
-        binding.searchToolbar.setNavigationOnClickListener {
-            finish()
-        }
 
         binding.buttonClearHistory.setOnClickListener {
             viewModel.clearSearchHistory()
@@ -95,8 +102,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
                 clearButton.visibility = clearButtonVisibility(s)
                 if (editText.text.isEmpty()) {
                     rvTracks.visibility = View.GONE
-                    nothingFound.visibility = View.GONE
-                    noInternet.visibility = View.GONE
+                    messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
                 }
                 llSearchHistory.visibility =
                     if (editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
@@ -106,11 +112,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             }
 
             override fun afterTextChanged(s: Editable?) {
+
             }
         }
         textWatcher?.let { editText.addTextChangedListener(it) }
 
-        editText.setOnEditorActionListener { _, actionId, _ ->
+        editText.setOnEditorActionListener { _, actionId, _ -> //enter на клаве
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.searchDebounce(
                     changedText = editText.text.toString()
@@ -120,11 +127,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
             false
         }
 
-        viewModel.getStateLiveData().observe(this) {
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        viewModel.getSearchHistoryLiveData().observe(this) { searchHistory ->
+        viewModel.getSearchHistoryLiveData().observe(viewLifecycleOwner) { searchHistory ->
             adapterHistory.tracks = searchHistory
             adapterHistory.notifyDataSetChanged()
         }
@@ -171,7 +178,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showContent(tracks: List<Track>) {
-        rvTracks.visibility = View.VISIBLE
+        if (editText.text.isNotEmpty()) rvTracks.visibility = View.VISIBLE
         messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
         progressBar.visibility = View.GONE
 
@@ -206,9 +213,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.TrackClickListener {
     override fun onTrackClick(track: Track) {
         if (clickDebounce()) {
             viewModel.addTrackToSearchHistory(track)
-            val intent = Intent(this, AudioPlayerActivity::class.java)
-            intent.putExtra("TrackId", track.trackId)
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_audioPlayerActivity,
+                AudioPlayerActivity.createArgs(track.trackId)
+            )
         }
     }
 

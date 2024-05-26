@@ -12,13 +12,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PlaylistsFragment().apply {
-            arguments = Bundle().apply {
-            }
-        }
-    }
-
     private val viewModel by viewModel<PlaylistsViewModel>()
 
     private lateinit var binding: FragmentPlaylistsBinding
@@ -39,5 +32,12 @@ class PlaylistsFragment : Fragment() {
 
     private fun showPlaylists(playlists: ArrayList<Playlist>) {
         if (playlists.isEmpty()) binding.playlistListIsEmptyLayout.visibility = View.VISIBLE
+    }
+
+    companion object {
+        fun newInstance() = PlaylistsFragment().apply {
+            arguments = Bundle().apply {
+            }
+        }
     }
 }

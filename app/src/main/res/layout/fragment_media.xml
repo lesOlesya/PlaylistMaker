@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    tools:context=".media.ui.activity.MediaActivity">
+    tools:context=".media.ui.fragment.MediaFragment">
 
     <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
         android:id="@+id/media_toolbar">

@@ -47,6 +47,8 @@ dependencies {
     implementation("com.github.moxy-community:moxy-android:2.2.2")
     kapt("com.github.moxy-community:moxy-compiler:2.2.2")
 
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.core:core-ktx:1.12.0")
