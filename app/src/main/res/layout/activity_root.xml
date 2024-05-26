@@ -43,10 +43,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:backgroundTint="@color/light_gray"/>
+            android:background="@color/light_gray"/>
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
