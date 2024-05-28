@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.domain
 
 interface PlayerRepository {
 
-    fun createUpdateTimerTask()
+    suspend fun createUpdateTimerTask()
 
     fun preparePlayer(url: String)
 

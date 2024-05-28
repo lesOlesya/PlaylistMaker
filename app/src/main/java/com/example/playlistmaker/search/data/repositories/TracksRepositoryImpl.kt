@@ -6,18 +6,20 @@ import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.search.domain.TracksRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1 -> {
-                Resource.Error(NO_INTERNET)
+                emit(Resource.Error(NO_INTERNET))
             }
 
             200 -> {
-                Resource.Success((response as TracksSearchResponse).results.map {
+                emit(Resource.Success((response as TracksSearchResponse).results.map {
                     Track(
                         it.trackId,
                         it.trackName ?: "",
@@ -30,15 +32,15 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                         it.country,
                         it.previewUrl
                     )
-                })
+                }))
             }
 
             400 -> {
-                Resource.Error(SERVER_ERROR)
+                emit(Resource.Error(SERVER_ERROR))
             }
 
             else -> {
-                Resource.Error(-100)
+                emit(Resource.Error(-100))
             }
         }
     }
