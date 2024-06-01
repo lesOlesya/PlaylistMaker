@@ -3,8 +3,10 @@ package com.example.playlistmaker.player.ui.activity
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -62,6 +64,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.playButton.setOnClickListener {
             viewModel.play()
         }
+
+        viewModel.getToastLiveData().observe(this, Observer {
+            it.getContentIfNotHandled()?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun dpToPx(dp: Float, context: Context): Int {

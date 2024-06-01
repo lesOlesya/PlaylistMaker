@@ -18,5 +18,7 @@ interface PlayerRepository {
         fun onProgress(progress: String)
         fun onStop()
         fun onPlay()
+
+        fun showToast()
     }
 }

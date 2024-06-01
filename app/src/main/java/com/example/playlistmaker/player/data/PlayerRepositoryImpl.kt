@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private val simpleDateFormat: SimpleDateFormat,
-    private val context: Context
+    private val simpleDateFormat: SimpleDateFormat
 ) : PlayerRepository {
 
     private var timerJob: Job? = null
@@ -68,11 +67,7 @@ class PlayerRepositoryImpl(
         when (playerState) {
             PlayerStates.STATE_DEFAULT -> {
                 statusObserver.onPlay()
-                Toast.makeText(
-                    context,
-                    "Отрывок трека не загружен",
-                    Toast.LENGTH_LONG
-                ).show()
+                statusObserver.showToast()
                 statusObserver.onStop()
             }
 
