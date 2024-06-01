@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.domain
 
 interface PlayerRepository {
 
-    fun createUpdateTimerTask()
+    suspend fun createUpdateTimerTask()
 
     fun preparePlayer(url: String)
 
@@ -18,5 +18,7 @@ interface PlayerRepository {
         fun onProgress(progress: String)
         fun onStop()
         fun onPlay()
+
+        fun showToast()
     }
 }

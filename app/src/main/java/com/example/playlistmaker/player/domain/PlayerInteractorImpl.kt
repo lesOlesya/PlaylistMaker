@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.domain
 
 class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
 
-    override fun createUpdateTimerTask() {
+    override suspend fun createUpdateTimerTask() {
         repository.createUpdateTimerTask()
     }
 

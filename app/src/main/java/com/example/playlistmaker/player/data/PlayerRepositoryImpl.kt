@@ -2,33 +2,34 @@ package com.example.playlistmaker.player.data
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.widget.Toast
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerStates
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private val simpleDateFormat: SimpleDateFormat,
-    private val context: Context
+    private val simpleDateFormat: SimpleDateFormat
 ) : PlayerRepository {
 
-    private val timerRunnable = Runnable { createUpdateTimerTask() }
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
 
     private lateinit var statusObserver: PlayerRepository.StatusObserver
 
     private var playerState = PlayerStates.STATE_DEFAULT
 
-    override fun createUpdateTimerTask() {
-        if (playerState == PlayerStates.STATE_PLAYING) {
+    override suspend fun createUpdateTimerTask() {
+        while(playerState == PlayerStates.STATE_PLAYING) {
             statusObserver.onProgress(
                 simpleDateFormat.format(mediaPlayer.currentPosition)
             )
-            mainThreadHandler.postDelayed(timerRunnable, DELAY)
-        } else mainThreadHandler.removeCallbacks(timerRunnable)
+            delay(DELAY)
+        }
     }
 
     override fun preparePlayer(url: String) {
@@ -38,9 +39,9 @@ class PlayerRepositoryImpl(
             playerState = PlayerStates.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
+            timerJob?.cancel()
             statusObserver.onStop()
             playerState = PlayerStates.STATE_PREPARED
-            mainThreadHandler.removeCallbacks(timerRunnable)
             statusObserver.onProgress("00:00")
         }
     }
@@ -49,14 +50,16 @@ class PlayerRepositoryImpl(
         mediaPlayer.start()
         statusObserver.onPlay()
         playerState = PlayerStates.STATE_PLAYING
-        mainThreadHandler.post(timerRunnable)
+        timerJob = GlobalScope.launch(Dispatchers.Main) {
+            createUpdateTimerTask()
+        }
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
         statusObserver.onStop()
         playerState = PlayerStates.STATE_PAUSED
-        mainThreadHandler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
     }
 
     override fun playbackControl(statusObserver: PlayerRepository.StatusObserver) {
@@ -64,11 +67,7 @@ class PlayerRepositoryImpl(
         when (playerState) {
             PlayerStates.STATE_DEFAULT -> {
                 statusObserver.onPlay()
-                Toast.makeText(
-                    context,
-                    "Отрывок трека не загружен",
-                    Toast.LENGTH_LONG
-                ).show()
+                statusObserver.showToast()
                 statusObserver.onStop()
             }
 
@@ -84,11 +83,10 @@ class PlayerRepositoryImpl(
 
     override fun releasePlayer() {
         mediaPlayer.release()
-        mainThreadHandler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
     }
 
     companion object {
-        private const val DELAY = 400L
+        private const val DELAY = 300L
     }
-
 }

@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,6 +12,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -23,6 +22,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
@@ -31,7 +31,7 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
 
     private val viewModel by viewModel<TracksSearchViewModel>()
 
-    private var isClickAllowed = true
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private val adapter = TrackAdapter(this)
 
@@ -43,7 +43,6 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var rvTracks: RecyclerView
-    private lateinit var handler: Handler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +57,13 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        handler = Handler(Looper.getMainLooper())
+        onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+            viewModel.addTrackToSearchHistory(track)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_audioPlayerActivity,
+                AudioPlayerActivity.createArgs(track.trackId)
+            )
+        }
 
         adapterHistory = TrackAdapter(this)
         adapterHistory.tracks = viewModel.getSearchHistoryLiveData().value!!
@@ -112,7 +117,6 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
             }
         }
         textWatcher?.let { editText.addTextChangedListener(it) }
@@ -200,24 +204,9 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
         }
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onTrackClick(track: Track) {
-        if (clickDebounce()) {
-            viewModel.addTrackToSearchHistory(track)
-            findNavController().navigate(
-                R.id.action_searchFragment_to_audioPlayerActivity,
-                AudioPlayerActivity.createArgs(track.trackId)
-            )
-        }
+        onTrackClickDebounce(track)
     }
 
     companion object {
