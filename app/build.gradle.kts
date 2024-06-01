@@ -43,12 +43,12 @@ android {
 dependencies {
 
     // Room
-    val roomVersion = "2.5.1" // текущая стабильная версия
+    val roomVersion = "2.6.1" // текущая стабильная версия
     implementation("androidx.room:room-runtime:$roomVersion") // библиотека Room
     kapt("androidx.room:room-compiler:$roomVersion") // Kotlin-кодогенератор
     implementation("androidx.room:room-ktx:$roomVersion") // поддержка корутин
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("androidx.viewpager2:viewpager2:1.1.0")

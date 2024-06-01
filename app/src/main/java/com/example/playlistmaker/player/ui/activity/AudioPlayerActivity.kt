@@ -48,6 +48,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding.yearTvAudioPlayer.text = track.releaseDate?.substring(0, 4).orEmpty()
             binding.genreTvAudioPlayer.text = track.primaryGenreName.orEmpty()
             binding.countryTvAudioPlayer.text = track.country.orEmpty()
+            binding.favoritesButton.isChecked = track.isFavorite
             Glide.with(this)
                 .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
                 .placeholder(R.drawable.placeholder_big)
@@ -63,6 +64,14 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.playButton.setOnClickListener {
             viewModel.play()
+        }
+
+        binding.favoritesButton.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
+        viewModel.getIsFavoriteLiveData().observe(this) {
+            binding.favoritesButton.isChecked = it
         }
 
         viewModel.getToastLiveData().observe(this, Observer {

@@ -1,27 +1,30 @@
 package com.example.playlistmaker.player.ui.view_model
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.media.domain.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.GetTrackByIdUseCase
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayStatus
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Event
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     trackId: Int,
     getTrackByIdUseCase: GetTrackByIdUseCase,
-    private val trackPlayer: PlayerInteractor
+    private val trackPlayer: PlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
 
     private val track = getTrackByIdUseCase.execute(trackId)
     private val url = track!!.previewUrl
 
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
+    private val isFavoriteLiveData = MutableLiveData<Boolean>()
     private val trackLiveData = MutableLiveData<Track>()
     private val toastLiveData = MutableLiveData<Event<String>>()
 
@@ -31,8 +34,18 @@ class PlayerViewModel(
     }
 
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
+    fun getIsFavoriteLiveData(): LiveData<Boolean> = isFavoriteLiveData
     fun getTrackLiveData(): LiveData<Track> = trackLiveData
     fun getToastLiveData(): LiveData<Event<String>> = toastLiveData
+
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            if (track!!.isFavorite) favoriteTracksInteractor.deleteTrack(track)
+            else favoriteTracksInteractor.addTrack(track)
+        }
+        track!!.isFavorite = !track.isFavorite
+        isFavoriteLiveData.value = track.isFavorite
+    }
 
     fun play() {
         trackPlayer.playbackControl(statusObserver = object : PlayerRepository.StatusObserver {

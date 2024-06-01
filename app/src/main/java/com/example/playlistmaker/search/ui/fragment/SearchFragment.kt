@@ -72,12 +72,12 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
         nothingFound = binding.nothingFoundLayout
         noInternet = binding.noInternetLayout
         progressBar = binding.progressBar
-        rvTracks = binding.tracksRecyclerView
         val clearButton = binding.clearIcon
         val llSearchHistory = binding.searchHistoryLayout
-        val rvSearchHistory = binding.searchHistoryRecyclerView
 
+        rvTracks = binding.tracksRecyclerView
         rvTracks.adapter = adapter
+        val rvSearchHistory = binding.searchHistoryRecyclerView
         rvSearchHistory.adapter = adapterHistory
 
         binding.buttonClearHistory.setOnClickListener {
