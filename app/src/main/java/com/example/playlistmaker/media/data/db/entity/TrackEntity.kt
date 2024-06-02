@@ -1,7 +1,13 @@
-package com.example.playlistmaker.search.domain.models
+package com.example.playlistmaker.media.data.db.entity
 
-data class Track(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "track_table")
+data class TrackEntity(
+    @PrimaryKey
     val trackId: Int,
+    val timeOfAdd: Long, // ID для БД
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
     val trackTimeMillis: Long, // Продолжительность трека
@@ -10,8 +16,5 @@ data class Track(
     val releaseDate: String?, // Год релиза трека
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна исполнителя
-    val previewUrl: String?, // Ссылка на сниппет
-    var isFavorite: Boolean = false
-//    val coverArtwork: String, // Ссылка на изображение обложки в 512x512bb.jpg
-//    val trackTime: String // Продолжительность трека в mm:ss
+    val previewUrl: String? // Ссылка на сниппет
 )

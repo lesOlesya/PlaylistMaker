@@ -69,25 +69,29 @@
         android:ellipsize="end"
         tools:text="Artist Name"/>
 
-    <ImageButton
+    <ToggleButton
         android:id="@+id/add_to_playlist_button"
-        android:layout_width="wrap_content"
+        android:layout_width="51dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="54dp"
         app:layout_constraintTop_toBottomOf="@id/artist_name_tv_audio_player"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         android:background="@null"
-        app:srcCompat="@drawable/add_to_playlist_icon"/>
+        android:textOff=""
+        android:textOn=""
+        android:drawableStart="@drawable/add_to_playlist_icon"/>
 
-    <ImageButton
-        android:id="@+id/add_to_favorites_button"
-        android:layout_width="wrap_content"
+    <ToggleButton
+        android:id="@+id/favoritesButton"
+        android:layout_width="51dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="54dp"
         app:layout_constraintTop_toBottomOf="@id/artist_name_tv_audio_player"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         android:background="@null"
-        app:srcCompat="@drawable/add_to_favorites_icon"/>
+        android:textOff=""
+        android:textOn=""
+        android:drawableEnd="@drawable/is_or_not_favorite"/>
 
     <ToggleButton
         android:id="@+id/play_button"
@@ -96,7 +100,7 @@
         android:layout_marginTop="@dimen/dp_32"
         app:layout_constraintTop_toBottomOf="@id/artist_name_tv_audio_player"
         app:layout_constraintStart_toEndOf="@id/add_to_playlist_button"
-        app:layout_constraintEnd_toStartOf="@id/add_to_favorites_button"
+        app:layout_constraintEnd_toStartOf="@id/favoritesButton"
         app:layout_constraintBottom_toTopOf="@id/track_time_tv_audio_player"
         android:background="@null"
         android:textOff=""
