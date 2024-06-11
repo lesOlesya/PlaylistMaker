@@ -17,7 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
+import com.example.playlistmaker.player.ui.fragment.AudioPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
 import com.example.playlistmaker.search.ui.TrackAdapter
@@ -60,8 +60,8 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
         onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
             viewModel.addTrackToSearchHistory(track)
             findNavController().navigate(
-                R.id.action_searchFragment_to_audioPlayerActivity,
-                AudioPlayerActivity.createArgs(track.trackId)
+                R.id.action_searchFragment_to_audioPlayerFragment,
+                AudioPlayerFragment.createArgs(track.trackId)
             )
         }
 

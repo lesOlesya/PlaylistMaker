@@ -11,8 +11,11 @@
         android:label="fragment_media"
         tools:layout="@layout/fragment_media" >
         <action
-            android:id="@+id/action_mediaFragment_to_audioPlayerActivity"
-            app:destination="@id/audioPlayerActivity" />
+            android:id="@+id/action_mediaFragment_to_creatingPlaylistFragment"
+            app:destination="@id/creatingPlaylistFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
     </fragment>
 
     <fragment
@@ -21,8 +24,8 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_audioPlayerActivity"
-            app:destination="@id/audioPlayerActivity" />
+            android:id="@+id/action_searchFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
     </fragment>
 
     <fragment
@@ -31,10 +34,20 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 
-    <activity
-        android:id="@+id/audioPlayerActivity"
-        android:name="com.example.playlistmaker.player.ui.activity.AudioPlayerActivity"
-        android:label="activity_audio_player"
-        tools:layout="@layout/activity_audio_player" />
+    <fragment
+        android:id="@+id/creatingPlaylistFragment"
+        android:name="com.example.playlistmaker.creating_playlist.ui.CreatingPlaylistFragment"
+        android:label="fragment_creating_playlist"
+        tools:layout="@layout/fragment_creating_playlist" />
+
+    <fragment
+        android:id="@+id/audioPlayerFragment"
+        android:name="com.example.playlistmaker.player.ui.fragment.AudioPlayerFragment"
+        android:label="fragment_audio_player"
+        tools:layout="@layout/fragment_audio_player" >
+        <action
+            android:id="@+id/action_audioPlayerFragment_to_creatingPlaylistFragment"
+            app:destination="@id/creatingPlaylistFragment" />
+    </fragment>
 
 </navigation>

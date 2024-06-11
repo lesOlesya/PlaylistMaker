@@ -1,17 +1,17 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Context
-import android.util.TypedValue
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.dpToPx
 import org.koin.core.component.KoinComponent
 import java.text.SimpleDateFormat
 
-class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewHolder(binding.root), KoinComponent {
+class TrackViewHolder(private val binding: TrackItemBinding) :
+    RecyclerView.ViewHolder(binding.root), KoinComponent {
 
     private val ivArtwork = binding.ivArtworkSmall
 
@@ -34,12 +34,4 @@ class TrackViewHolder(private val binding: TrackItemBinding): RecyclerView.ViewH
             listener.onTrackClick(track)
         }
     }
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics).toInt()
-    }
-
 }

@@ -11,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
-import com.example.playlistmaker.media.ui.FavoriteTracksState
+import com.example.playlistmaker.media.ui.state.FavoriteTracksState
 import com.example.playlistmaker.media.ui.view_model.FavoriteTracksViewModel
-import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
+import com.example.playlistmaker.player.ui.fragment.AudioPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.util.debounce
@@ -41,8 +41,8 @@ class FavoriteTracksFragment : Fragment(), TrackAdapter.TrackClickListener {
 
         onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
             findNavController().navigate(
-                R.id.action_mediaFragment_to_audioPlayerActivity,
-                AudioPlayerActivity.createArgs(track.trackId)
+                R.id.action_mediaFragment_to_audioPlayerFragment,
+                AudioPlayerFragment.createArgs(track.trackId)
             )
         }
         rvTracks = binding.favoriteTracksRecyclerView
@@ -52,7 +52,6 @@ class FavoriteTracksFragment : Fragment(), TrackAdapter.TrackClickListener {
             render(it)
         }
     }
-
 
     private fun render(state: FavoriteTracksState) {
         when (state) {
