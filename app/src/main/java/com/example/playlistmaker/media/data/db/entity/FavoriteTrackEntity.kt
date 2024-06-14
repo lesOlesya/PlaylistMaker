@@ -3,11 +3,11 @@ package com.example.playlistmaker.media.data.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_table")
-data class TrackEntity(
+@Entity(tableName = "favorite_track_table")
+data class FavoriteTrackEntity(
     @PrimaryKey
     val trackId: Int,
-    val timeOfAdd: Long, // ID для БД
+    val timeOfAdd: Long, // время добавления для сортировки
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
     val trackTimeMillis: Long, // Продолжительность трека

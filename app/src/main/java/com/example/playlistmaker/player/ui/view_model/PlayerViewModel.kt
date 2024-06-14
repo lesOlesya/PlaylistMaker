@@ -56,19 +56,19 @@ class PlayerViewModel(
     }
 
     fun onPlaylistClick(playlist: Playlist) {
-        val tracks = playlist.tracksList
-        tracks.forEach {
-            if (it.trackId == track!!.trackId) {
+        val trackIds = playlist.tracksList
+        trackIds.forEach {
+            if (it == track!!.trackId) {
                 toastLiveData.value = Event("Трек уже добавлен в плейлист ${playlist.playlistName}")
                 return
             }
         }
-        playlist.tracksList.add(track!!)
-        playlist.tracksCount++
         viewModelScope.launch {
-            playlistsInteractor.updatePlaylist(playlist)
-            loadPlaylists()
-            toastLiveData.value = Event("Добавлено в плейлист ${playlist.playlistName}")
+            val playlistUpdateIsSuccessful = playlistsInteractor.updatePlaylist(playlist, track!!)
+            if (playlistUpdateIsSuccessful) {
+                loadPlaylists()
+                toastLiveData.value = Event("Добавлено в плейлист ${playlist.playlistName}")
+            } else toastLiveData.value = Event("Ошибка")
         }
     }
 

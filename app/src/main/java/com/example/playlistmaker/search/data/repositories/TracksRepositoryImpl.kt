@@ -25,7 +25,7 @@ class TracksRepositoryImpl(
             }
 
             200 -> {
-                val favoriteTracksId = GlobalScope.async { appDatabase.trackDao().getTracksId() }
+                val favoriteTracksId = GlobalScope.async { appDatabase.favoriteTrackDao().getTracksId() }
                 emit(Resource.Success((response as TracksSearchResponse).results.map {
                     Track(
                         it.trackId,

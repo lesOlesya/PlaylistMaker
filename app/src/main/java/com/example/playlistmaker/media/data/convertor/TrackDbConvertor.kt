@@ -1,6 +1,6 @@
 package com.example.playlistmaker.media.data.convertor
 
-import com.example.playlistmaker.media.data.db.entity.TrackEntity
+import com.example.playlistmaker.media.data.db.entity.FavoriteTrackEntity
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackDbConvertor {
@@ -9,7 +9,7 @@ class TrackDbConvertor {
 //        return TrackEntity(movie.id, movie.resultType, movie.image, movie.title, movie.description)
 //    }
 
-    fun map(track: TrackEntity): Track {
+    fun map(track: FavoriteTrackEntity): Track {
         return Track(
             track.trackId,
             track.trackName ?: "",
@@ -25,8 +25,8 @@ class TrackDbConvertor {
         )
     }
 
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+    fun map(track: Track): FavoriteTrackEntity {
+        return FavoriteTrackEntity(
             track.trackId,
             System.currentTimeMillis(),
             track.trackName ?: "",
