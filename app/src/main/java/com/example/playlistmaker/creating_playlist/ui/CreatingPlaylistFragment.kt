@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatingPlaylistBinding
 import com.example.playlistmaker.util.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -90,22 +91,18 @@ class CreatingPlaylistFragment : Fragment() {
         }
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNeutralButton("Отмена") { dialog, which ->
+            .setTitle(getString(R.string.finish_creating_playlist))
+            .setMessage(getString((R.string.all_unsaved_data_will_be_lost)))
+            .setNeutralButton(getString((R.string.cancel))) { dialog, which ->
                 // ничего не делаем
-            }.setPositiveButton("Завершить") { dialog, which ->
+            }.setPositiveButton(getString((R.string.finish))) { dialog, which ->
                 findNavController().navigateUp()
             }
 
         //регистрируем событие, которое вызывает photo picker
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    Glide.with(this)
-                        .load(uri)
-                        .transform(CenterCrop(), RoundedCorners(dpToPx(8F, coverIv.context)))
-                        .into(coverIv)
-                    viewModel.uri = uri
+                    viewModel.setCover(uri)
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -121,7 +118,7 @@ class CreatingPlaylistFragment : Fragment() {
                         }
                         is PermissionResult.Denied.DeniedPermanently -> {
                             Toast.makeText(requireContext(),
-                                "Нужно разрешение на доступ к файлам устройста",
+                                getString((R.string.toast_permission_read_data)),
                                 Toast.LENGTH_LONG).show()
                         }
                         is PermissionResult.Denied.NeedsRationale -> {
@@ -133,12 +130,19 @@ class CreatingPlaylistFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.getCoverUriLiveData().observe(viewLifecycleOwner) {
+            Glide.with(this)
+                .load(it)
+                .transform(CenterCrop(), RoundedCorners(dpToPx(8F, coverIv.context)))
+                .into(coverIv)
+        }
     }
 
     private fun finishOrShowConfirmDialog() {
         if (playlistNameEditText.text.toString().isNotEmpty() ||
             playlistDescriptionEditText.text.toString().isNotEmpty() ||
-            viewModel.uri != null) confirmDialog.show()
+            viewModel.getCoverUriLiveData().value != null) confirmDialog.show()
         else findNavController().navigateUp()
     }
 }

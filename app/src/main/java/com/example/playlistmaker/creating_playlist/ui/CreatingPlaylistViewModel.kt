@@ -1,6 +1,8 @@
 package com.example.playlistmaker.creating_playlist.ui
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.creating_playlist.domain.PlaylistCoverInteractor
@@ -14,17 +16,20 @@ class CreatingPlaylistViewModel(
     private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    var uri: Uri? = null
+    private val coverUriLiveData = MutableLiveData<Uri>()
+    fun getCoverUriLiveData(): LiveData<Uri> = coverUriLiveData
+
 
     fun createPlaylist(playlistName: String, playlistDescription: String) {
-        uri?.let { saveCover(uri!!, playlistName) }
+        val playlistId = System.currentTimeMillis()
+        coverUriLiveData.value?.let { saveCover(coverUriLiveData.value!!, playlistId.toString()) }
         viewModelScope.launch {
             playlistsInteractor.addPlaylist(
                 Playlist(
-                    System.currentTimeMillis(),
+                    playlistId,
                     playlistName,
                     playlistDescription,
-                    playlistCoverInteractor.loadImageFromPrivateStorage(playlistName).toString(),
+                    playlistCoverInteractor.loadImageFromPrivateStorage(playlistId.toString()).toString(),
                     ArrayList<Int>(),
                     0
                     )
@@ -34,6 +39,10 @@ class CreatingPlaylistViewModel(
 
     fun setFilePath(filePath: File) {
         playlistCoverInteractor.setFilePath(filePath)
+    }
+
+    fun setCover(uri: Uri) {
+        coverUriLiveData.postValue(uri)
     }
 
     private fun saveCover(uri: Uri, fileName: String) {

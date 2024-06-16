@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -95,8 +96,7 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
         }
 
         editText.setOnFocusChangeListener { view, hasFocus ->
-            llSearchHistory.visibility =
-                if (hasFocus && editText.text.isEmpty() && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
+            llSearchHistory.isVisible = hasFocus && editText.text.isEmpty() && adapterHistory.tracks.isNotEmpty()
         }
 
         textWatcher = object : TextWatcher {
@@ -104,13 +104,13 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.visibility = clearButtonVisibility(s)
+                clearButton.isVisible = !s.isNullOrEmpty()
+//                clearButton.visibility = clearButtonVisibility(s)
                 if (editText.text.isEmpty()) {
                     rvTracks.visibility = View.GONE
                     messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
                 }
-                llSearchHistory.visibility =
-                    if (editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()) View.VISIBLE else View.GONE
+                llSearchHistory.isVisible = editText.hasFocus() && s?.isEmpty() == true && adapterHistory.tracks.isNotEmpty()
                 viewModel.searchDebounce(
                     changedText = s?.toString() ?: ""
                 )
@@ -182,7 +182,7 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showContent(tracks: List<Track>) {
-        if (editText.text.isNotEmpty()) rvTracks.visibility = View.VISIBLE
+        rvTracks.isVisible = editText.text.isNotEmpty()
         messageVisibility(noInternetIsVisible = false, nothingFoundIsVisible = false)
         progressBar.visibility = View.GONE
 
@@ -192,16 +192,8 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
     }
 
     private fun messageVisibility(noInternetIsVisible: Boolean, nothingFoundIsVisible: Boolean) {
-        noInternet.visibility = if (noInternetIsVisible) View.VISIBLE else View.GONE
-        nothingFound.visibility = if (nothingFoundIsVisible) View.VISIBLE else View.GONE
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        noInternet.isVisible = noInternetIsVisible
+        nothingFound.isVisible = nothingFoundIsVisible
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -32,4 +32,9 @@
     <string name="description">Описание</string>
     <string name="to_create">Создать</string>
     <string name="playlists_bottom_sheet_header">Добавить в плейлист</string>
+    <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
+    <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="toast_permission_read_data">Нужно разрешение на доступ к файлам устройста</string>
 </resources>
