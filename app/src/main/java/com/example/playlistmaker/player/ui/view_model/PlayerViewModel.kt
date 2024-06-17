@@ -36,7 +36,7 @@ class PlayerViewModel(
     init {
         loadPlaylists()
         trackLiveData.postValue(track!!)
-        url?.let { trackPlayer.preparePlayer(url) } //if (url != null) trackPlayer.preparePlayer()
+        url?.let { trackPlayer.preparePlayer(it) } //if (url != null) trackPlayer.preparePlayer()
     }
 
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData

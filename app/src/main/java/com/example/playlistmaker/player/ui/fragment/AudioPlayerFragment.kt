@@ -18,7 +18,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.media.domain.model.Playlist
 import com.example.playlistmaker.media.ui.state.PlaylistsState
-import com.example.playlistmaker.player.ui.PlaylistHorizontalAdapter
+import com.example.playlistmaker.player.ui.adapter.PlaylistHorizontalAdapter
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.util.dpToPx

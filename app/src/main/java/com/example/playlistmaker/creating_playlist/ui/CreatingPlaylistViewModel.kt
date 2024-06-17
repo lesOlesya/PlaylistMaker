@@ -22,7 +22,9 @@ class CreatingPlaylistViewModel(
 
     fun createPlaylist(playlistName: String, playlistDescription: String) {
         val playlistId = System.currentTimeMillis()
-        coverUriLiveData.value?.let { saveCover(coverUriLiveData.value!!, playlistId.toString()) }
+        coverUriLiveData.value?.let {
+            saveCover(it, playlistId.toString())
+        }
         viewModelScope.launch {
             playlistsInteractor.addPlaylist(
                 Playlist(
