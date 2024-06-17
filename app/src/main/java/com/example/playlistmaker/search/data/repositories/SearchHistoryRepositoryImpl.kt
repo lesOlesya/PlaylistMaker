@@ -37,7 +37,7 @@ class SearchHistoryRepositoryImpl(
 
 
     override fun getHistory(): ArrayList<Track> {
-        val favoriteTracksId = GlobalScope.async { appDatabase.trackDao().getTracksId() }
+        val favoriteTracksId = GlobalScope.async { appDatabase.favoriteTrackDao().getTracksId() }
         val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return ArrayList<Track>()
         val type = object : TypeToken<ArrayList<Track>>() {}.type
         val tracks = gson.fromJson<ArrayList<Track>>(json, type)

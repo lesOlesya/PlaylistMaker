@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/root_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/dp_12"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/playlist_small_cover_iv"
+        android:layout_marginVertical="@dimen/dp_8"
+        android:layout_gravity="center_vertical"
+        android:layout_height="48dp"
+        android:layout_width="48dp"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        tools:ignore="RtlSymmetry">
+
+        <TextView style="@style/TextStyle"
+            android:id="@+id/playlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_14"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Playlist Name"/>
+
+        <TextView style="@style/TextStyle"
+            android:id="@+id/tracks_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="?attr/colorPrimaryVariant"
+            tools:text="98 треков"/>
+
+    </LinearLayout>
+
+</LinearLayout>

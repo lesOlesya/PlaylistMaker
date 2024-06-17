@@ -1,9 +1,12 @@
-package com.example.playlistmaker.media.domain
+package com.example.playlistmaker.media.domain.impl
 
+import com.example.playlistmaker.media.domain.FavoriteTracksInteractor
+import com.example.playlistmaker.media.domain.FavoriteTracksRepository
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class FavoriteTracksInteractorImpl(private val favoriteTracksRepository: FavoriteTracksRepository) : FavoriteTracksInteractor {
+class FavoriteTracksInteractorImpl(private val favoriteTracksRepository: FavoriteTracksRepository) :
+    FavoriteTracksInteractor {
     override suspend fun addTrack(track: Track) {
         return favoriteTracksRepository.addTrack(track)
     }
