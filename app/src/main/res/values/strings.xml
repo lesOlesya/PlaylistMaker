@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">Playlist maker</string>
+    <string name="app_name" translatable="false">Playlist Maker</string>
+
     <string name="search">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
@@ -28,13 +29,48 @@
     <string name="media_is_empty">Ваша медиатека пуста</string>
     <string name="playlist_list_is_empty">Вы не создали\nни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="edit_playlist">Редактировать плейлист</string>
     <string name="name">Название*</string>
     <string name="description">Описание</string>
     <string name="to_create">Создать</string>
+    <string name="to_save_button_text">Сохранить</string>
     <string name="playlists_bottom_sheet_header">Добавить в плейлист</string>
     <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
     <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
     <string name="cancel">Отмена</string>
     <string name="finish">Завершить</string>
     <string name="toast_permission_read_data">Нужно разрешение на доступ к файлам устройста</string>
+    <string name="playlists_track_list_is_empty">Вы не добавили\nни одного трека</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="delete_track_dialog_title">Хотите удалить трек?\n\n</string>
+    <string name="delete_playlist_dialog_title">Хотите удалить плейлист «%s»?\n\n</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="no_tracks_for_shared">Сначала добавьте треки</string>
+    <string name="playlist_updated_toast">Плейлист обновлён</string>
+    <string name="playlist_created_toast">Плейлист «%s» создан</string>
+    <string name="track_already_added_toast">"Трек уже добавлен в плейлист «%s»"</string>
+    <string name="added_to_playlist_toast">"Добавлено в плейлист «%s»"</string>
+    <string name="error_toast">Ошибка</string>
+    <string name="snippet_not_loaded_toast">Отрывок трека не загружен</string>
+
+    <plurals name="trackCount">
+        <item quantity="one">%1$d track</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
+
+    <plurals name="minuteCount">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+
+<!--    <plurals name="trackCodsdunt">-->
+<!--        <item quantity="one" formatted="true">Produkty</item>-->
+<!--        <item quantity="two" formatted="true">Produkty</item>-->
+<!--        <item quantity="few" formatted="true">Produkty</item>-->
+<!--        <item quantity="other" formatted="true">Produktów</item>-->
+<!--    </plurals>-->
+
 </resources>

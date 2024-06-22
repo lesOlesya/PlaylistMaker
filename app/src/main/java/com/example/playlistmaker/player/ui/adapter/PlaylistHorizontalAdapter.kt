@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistHorizontalItemBinding
-import com.example.playlistmaker.media.domain.model.Playlist
+import com.example.playlistmaker.media.playlists.domain.model.Playlist
 
 class PlaylistHorizontalAdapter (
     private val listener: PlaylistClickListener

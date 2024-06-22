@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".creating_playlist.ui.CreatingPlaylistFragment">
+    tools:context=".creating_and_updating_playlist.ui.fragment.CreatingPlaylistFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
@@ -30,6 +30,7 @@
         app:layout_constraintBottom_toTopOf="@id/cover_iv_creating_playlist">
 
         <TextView style="@style/HeaderTextStyle"
+            android:id="@+id/title_toolbar"
             android:layout_marginStart="@dimen/dp_8"
             android:text="@string/new_playlist"/>
 
@@ -47,7 +48,7 @@
         app:layout_constraintTop_toBottomOf="@id/creating_playlist_toolbar"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintBottom_toTopOf="@id/playlist_name_input_layout"
-        android:src="@drawable/playlist_cover_background"/>
+        android:src="@drawable/add_cover_placeholder"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlist_name_input_layout"
@@ -89,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="100"
-            android:maxLines="3"/>
+            android:maxLines="2"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

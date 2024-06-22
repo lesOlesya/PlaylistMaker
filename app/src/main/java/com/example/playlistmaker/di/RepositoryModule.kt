@@ -1,13 +1,13 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.creating_playlist.data.PlaylistCoverRepositoryImpl
-import com.example.playlistmaker.creating_playlist.domain.PlaylistCoverRepository
-import com.example.playlistmaker.media.data.FavoriteTracksRepositoryImpl
-import com.example.playlistmaker.media.data.PlaylistsRepositoryImpl
-import com.example.playlistmaker.media.data.convertor.PlaylistDbConvertor
-import com.example.playlistmaker.media.data.convertor.TrackDbConvertor
-import com.example.playlistmaker.media.domain.FavoriteTracksRepository
-import com.example.playlistmaker.media.domain.PlaylistsRepository
+import com.example.playlistmaker.creating_and_updating_playlist.data.PlaylistCoverRepositoryImpl
+import com.example.playlistmaker.creating_and_updating_playlist.domain.PlaylistCoverRepository
+import com.example.playlistmaker.media.favoriteTracks.data.FavoriteTracksRepositoryImpl
+import com.example.playlistmaker.media.playlists.data.PlaylistsRepositoryImpl
+import com.example.playlistmaker.media.playlists.data.convertor.PlaylistDbConvertor
+import com.example.playlistmaker.media.favoriteTracks.data.convertor.TrackDbConvertor
+import com.example.playlistmaker.media.favoriteTracks.domain.FavoriteTracksRepository
+import com.example.playlistmaker.media.playlists.domain.PlaylistsRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl

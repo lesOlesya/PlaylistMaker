@@ -8,15 +8,4 @@
         <item name="android:checked">true</item>
     </style>
 
-    <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="buttonBarNeutralButtonStyle">@style/NeutralButtonStyle</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-    </style>
-    <style name="NeutralButtonStyle" parent="Widget.Material3.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/blue</item>
-    </style>
-    <style name="PositiveButtonStyle" parent="Widget.Material3.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/text_gray</item>
-    </style>
-
 </resources>

@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
-import com.example.playlistmaker.media.domain.model.Playlist
-import com.example.playlistmaker.media.ui.state.PlaylistsState
+import com.example.playlistmaker.media.playlists.domain.model.Playlist
+import com.example.playlistmaker.media.playlists.ui.state.PlaylistsState
 import com.example.playlistmaker.player.ui.adapter.PlaylistHorizontalAdapter
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.util.debounce
@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat
 class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickListener {
 
     private lateinit var binding: FragmentAudioPlayerBinding
+
+    private lateinit var viewModel : PlayerViewModel
 
     private val simpleDateFormat: SimpleDateFormat by inject()
 
@@ -58,13 +60,9 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: PlayerViewModel by viewModel {
+        viewModel = viewModel<PlayerViewModel> {
             parametersOf(trackId)
-        }
-
-        onPlaylistClickDebounce = debounce<Playlist>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { playlist ->
-            viewModel.onPlaylistClick(playlist)
-        }
+        }.value
 
         val bottomSheetContainer = binding.standardBottomSheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
@@ -76,6 +74,15 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
 
         binding.audioPlayerToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
+        }
+
+        onPlaylistClickDebounce = debounce<Playlist>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { playlist ->
+            viewModel.onPlaylistClick(
+                playlist,
+                listOf(getString(R.string.track_already_added_toast),
+                    getString(R.string.added_to_playlist_toast),
+                    getString(R.string.error_toast))
+            )
         }
 
         viewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
@@ -102,7 +109,7 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
         }
 
         binding.playButton.setOnClickListener {
-            viewModel.play()
+            viewModel.play(getString(R.string.snippet_not_loaded_toast))
         }
 
         binding.favoritesButton.setOnClickListener {
@@ -110,7 +117,7 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         binding.buttonNewPlaylist.setOnClickListener {
@@ -124,9 +131,9 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
                     BottomSheetBehavior.STATE_EXPANDED -> { // full opened
                     }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        viewModel.loadPlaylists()
+
                     }
-                    BottomSheetBehavior.STATE_COLLAPSED -> { // 1/4 opened
+                    BottomSheetBehavior.STATE_COLLAPSED -> { // opened
                     }
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
@@ -138,7 +145,7 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = slideOffset
+                binding.overlay.alpha = slideOffset + 0.4F
             }
         })
 
@@ -148,7 +155,7 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
 
         viewModel.getToastLiveData().observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT, ).show()
             }
         })
 
@@ -179,9 +186,13 @@ class AudioPlayerFragment : Fragment(), PlaylistHorizontalAdapter.PlaylistClickL
         adapter.notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onPlaylistClick(playlist: Playlist) {
         onPlaylistClickDebounce(playlist)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadPlaylists()
     }
 
     companion object {
