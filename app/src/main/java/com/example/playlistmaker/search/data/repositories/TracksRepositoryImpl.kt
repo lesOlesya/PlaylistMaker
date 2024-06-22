@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.data.repositories
 
-import com.example.playlistmaker.media.data.db.AppDatabase
+import com.example.playlistmaker.media.data.AppDatabase
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse

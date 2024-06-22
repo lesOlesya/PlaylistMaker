@@ -21,7 +21,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.fragment.AudioPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
-import com.example.playlistmaker.search.ui.TrackAdapter
+import com.example.playlistmaker.search.ui.adapter.TrackAdapter
 import com.example.playlistmaker.search.ui.view_model.TracksSearchViewModel
 import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -196,9 +196,12 @@ class SearchFragment : Fragment(), TrackAdapter.TrackClickListener {
         nothingFound.isVisible = nothingFoundIsVisible
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onTrackClick(track: Track) {
         onTrackClickDebounce(track)
+    }
+
+    override fun onTrackLongClick(track: Track) {
+        TODO("Not yet implemented")
     }
 
     companion object {

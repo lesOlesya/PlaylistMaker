@@ -3,6 +3,8 @@ package com.example.playlistmaker.root.ui
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
@@ -20,6 +22,9 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("ru-RU")
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
         viewModel.setAppTheme()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootFragmentContainerView) as NavHostFragment
@@ -27,10 +32,10 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.creatingPlaylistFragment-> {
-                    binding.bottomNavigationView.visibility = View.GONE
-                }
-                R.id.audioPlayerFragment-> {
+                R.id.creatingPlaylistFragment,
+                R.id.updatingPlaylistFragment,
+                R.id.audioPlayerFragment,
+                R.id.playlistInfoFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
                 else -> {
@@ -41,5 +46,4 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
     }
-
 }

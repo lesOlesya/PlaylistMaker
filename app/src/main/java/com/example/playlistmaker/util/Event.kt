@@ -1,6 +1,6 @@
 package com.example.playlistmaker.util
 
-open class Event<out T>(private val content: T) {
+open class Event<out T>(private val content: T) { // Toast
 
     var hasBeenHandled = false
         private set // Allow external read but not write

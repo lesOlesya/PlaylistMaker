@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.media.domain.FavoriteTracksInteractor
-import com.example.playlistmaker.media.domain.PlaylistsInteractor
-import com.example.playlistmaker.media.domain.model.Playlist
-import com.example.playlistmaker.media.ui.state.PlaylistsState
-import com.example.playlistmaker.player.domain.GetTrackByIdUseCase
+import com.example.playlistmaker.media.favoriteTracks.domain.FavoriteTracksInteractor
+import com.example.playlistmaker.media.playlists.domain.PlaylistsInteractor
+import com.example.playlistmaker.media.playlists.domain.model.Playlist
+import com.example.playlistmaker.media.playlists.ui.state.PlaylistsState
+import com.example.playlistmaker.player.domain.impl.GetTrackByIdUseCase
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayStatus
@@ -34,7 +34,6 @@ class PlayerViewModel(
     private val playlistsStateLiveData = MutableLiveData<PlaylistsState>()
 
     init {
-        loadPlaylists()
         trackLiveData.postValue(track!!)
         url?.let { trackPlayer.preparePlayer(it) } //if (url != null) trackPlayer.preparePlayer()
     }
@@ -49,17 +48,17 @@ class PlayerViewModel(
         viewModelScope.launch {
             playlistsInteractor
                 .getPlaylists()
-                .collect { it ->
+                .collect {
                     processResult(it)
                 }
         }
     }
 
-    fun onPlaylistClick(playlist: Playlist) {
-        val trackIds = playlist.tracksList
+    fun onPlaylistClick(playlist: Playlist, toastList: List<String>) {
+        val trackIds = playlist.trackIdsList
         trackIds.forEach {
             if (it == track!!.trackId) {
-                toastLiveData.value = Event("Трек уже добавлен в плейлист ${playlist.playlistName}")
+                toastLiveData.value = Event(toastList[0].format(playlist.playlistName)) // уже добавлен
                 return
             }
         }
@@ -67,8 +66,8 @@ class PlayerViewModel(
             val playlistUpdateIsSuccessful = playlistsInteractor.updatePlaylist(playlist, track!!)
             if (playlistUpdateIsSuccessful) {
                 loadPlaylists()
-                toastLiveData.value = Event("Добавлено в плейлист ${playlist.playlistName}")
-            } else toastLiveData.value = Event("Ошибка")
+                toastLiveData.value = Event(toastList[1].format(playlist.playlistName)) // добавлен
+            } else toastLiveData.value = Event(toastList[2]) // ошибка
         }
     }
 
@@ -81,7 +80,7 @@ class PlayerViewModel(
         isFavoriteLiveData.value = track.isFavorite
     }
 
-    fun play() {
+    fun play(toastText: String) {
         trackPlayer.playbackControl(statusObserver = object : PlayerRepository.StatusObserver {
             override fun onProgress(progress: String) {
                 playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
@@ -96,7 +95,7 @@ class PlayerViewModel(
             }
 
             override fun showToast() {
-                toastLiveData.value = Event("Отрывок трека не загружен")
+                toastLiveData.value = Event(toastText) // отрывок не загружен
             }
         })
     }

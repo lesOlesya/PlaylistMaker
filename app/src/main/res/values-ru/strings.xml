@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search">Поиск</string>
+    <string name="media_library">Медиатека</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="write_to_support">Написать в поддержку</string>
+    <string name="terms_of_use">Пользовательское соглашение</string>
+    <string name="link_YP_android">https://practicum.yandex.ru/android-developer/?from=catalog</string>
+    <string name="email">olesyad285@gmail.com</string>
+    <string name="subject_YP">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="message_YP">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="link_YP_terms_of_use">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="update">Обновить</string>
+    <string name="error_not_internet">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="error_nothing_found">Ничего не нашлось</string>
+    <string name="you_searched">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="media">Медиатека</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="media_is_empty">Ваша медиатека пуста</string>
+    <string name="playlist_list_is_empty">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="edit_playlist">Редактировать плейлист</string>
+    <string name="name">Название*</string>
+    <string name="description">Описание</string>
+    <string name="to_create">Создать</string>
+    <string name="to_save_button_text">Сохранить</string>
+    <string name="playlists_bottom_sheet_header">Добавить в плейлист</string>
+    <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
+    <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="toast_permission_read_data">Нужно разрешение на доступ к файлам устройста</string>
+    <string name="playlists_track_list_is_empty">Вы не добавили\nни одного трека</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="delete_track_dialog_title">Хотите удалить трек?\n\n</string>
+    <string name="delete_playlist_dialog_title">Хотите удалить плейлист «%s»?\n\n</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="no_tracks_for_shared">Сначала добавьте треки</string>
+    <string name="playlist_updated_toast">Плейлист обновлён</string>
+    <string name="playlist_created_toast">Плейлист «%s» создан</string>
+    <string name="track_already_added_toast">"Трек уже добавлен в плейлист «%s»"</string>
+    <string name="added_to_playlist_toast">"Добавлено в плейлист «%s»"</string>
+    <string name="error_toast">Ошибка</string>
+    <string name="snippet_not_loaded_toast">Отрывок трека не загружен</string>
+
+    <plurals name="trackCount">
+        <item quantity="one">%1$d трек</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+
+    <plurals name="minuteCount">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
+    </plurals>
+</resources>

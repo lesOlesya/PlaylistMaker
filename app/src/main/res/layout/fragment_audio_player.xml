@@ -32,8 +32,7 @@
             android:id="@+id/audio_player_toolbar"
             app:navigationIcon="@drawable/arrow"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/artwork_iv_audio_player">
+            app:layout_constraintStart_toStartOf="parent">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -244,7 +243,7 @@
         android:background="@drawable/bottom_sheet_behavior_background"
         android:orientation="vertical"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="240dp"
+        app:behavior_peekHeight="@dimen/dp_376"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <androidx.appcompat.widget.Toolbar style="@style/Toolbar"
@@ -282,7 +281,7 @@
             android:layout_marginHorizontal="@dimen/dp_24"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
