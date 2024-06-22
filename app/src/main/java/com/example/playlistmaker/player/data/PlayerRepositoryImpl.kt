@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.data
 
-import android.content.Context
 import android.media.MediaPlayer
-import android.widget.Toast
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerStates
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +23,11 @@ class PlayerRepositoryImpl(
 
     override suspend fun createUpdateTimerTask() {
         while(playerState == PlayerStates.STATE_PLAYING) {
-            statusObserver.onProgress(
-                simpleDateFormat.format(mediaPlayer.currentPosition)
-            )
+            if (mediaPlayer.currentPosition < 29400) {
+                statusObserver.onProgress(
+                    simpleDateFormat.format(mediaPlayer.currentPosition)
+                )
+            }
             delay(DELAY)
         }
     }

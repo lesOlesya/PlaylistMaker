@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
@@ -35,6 +36,7 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.PlaylistClickListener {
                               savedInstanceState: Bundle?): View? {
         binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,14 +74,18 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.PlaylistClickListener {
         binding.playlistListIsEmptyLayout.visibility = View.VISIBLE
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun showContent(playlists: List<Playlist>) {
         rvPlaylists.visibility = View.VISIBLE
         binding.playlistListIsEmptyLayout.visibility = View.GONE
 
-        adapter.playlists.clear()
-        adapter.playlists.addAll(playlists)
-        adapter.notifyDataSetChanged()
+        adapter.submitList(playlists)
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() { // возврат к началу RV после добавления
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                (binding.playlistsRecyclerView.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(positionStart, 0)
+            }
+        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
